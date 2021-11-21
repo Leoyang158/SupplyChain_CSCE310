@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -25,7 +25,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="supplyTrendsTitle">
        <property name="font">
         <font>
          <family>Palatino Linotype</family>
@@ -192,7 +192,7 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="advanceTitle">
          <property name="text">
           <string>Advanced Queries</string>
          </property>
@@ -230,102 +230,6 @@
          </item>
         </layout>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item>
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_6">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_7">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_8">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <widget class="QPushButton" name="pushButton_9">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_10">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_11">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_12">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <widget class="QPushButton" name="pushButton_13">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_14">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_15">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_16">
-           <property name="text">
-            <string>Other Type</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
      </item>
     </layout>
@@ -337,7 +241,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuGet_Start">
