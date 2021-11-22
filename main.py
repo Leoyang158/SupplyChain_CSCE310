@@ -12,6 +12,17 @@ class MainPage(QtWidgets.QMainWindow):
         self.uiCustomerSubmit.clicked.connect(self.customerResult)
         self.uiProductSubmit.clicked.connect(self.productResult)
         self.uiFraud.clicked.connect(self.advancedQuery)
+        self.uiAddAndCombo.setVisible(False)
+        self.uiAddAttributeCombo.setVisible(False)
+        self.uiAddSignCombo.setVisible(False)
+        self.uiAddText.setVisible(False)
+        self.uiCustomerAdd.clicked.connect(self.add)
+
+    def add(self):
+        self.uiAddAndCombo.setVisible(True)
+        self.uiAddAttributeCombo.setVisible(True)
+        self.uiAddSignCombo.setVisible(True)
+        self.uiAddText.setVisible(True)
 
     def orderResult(self):
         orderView = ResultPage()
