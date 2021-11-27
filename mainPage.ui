@@ -99,17 +99,7 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="basicTitle">
-         <property name="styleSheet">
-          <string notr="true">font: 12pt &quot;MS Sans Serif&quot;;</string>
-         </property>
-         <property name="text">
-          <string>Basic Queries</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="uiProductLabel">
@@ -215,6 +205,16 @@
          </item>
         </layout>
        </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="basicTitle">
+         <property name="styleSheet">
+          <string notr="true">font: 12pt &quot;MS Sans Serif&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Basic Queries</string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
@@ -244,6 +244,90 @@
          </item>
          <item>
           <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="4" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="uiAddAndCombo_2"/>
+         </item>
+         <item>
+          <widget class="QComboBox" name="uiAddAttributeCombo_2"/>
+         </item>
+         <item>
+          <widget class="QComboBox" name="uiAddSignCombo_2"/>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="uiAddText_2"/>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="6" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <spacer name="horizontalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="uiAddAndCombo_3"/>
+         </item>
+         <item>
+          <widget class="QComboBox" name="uiAddAttributeCombo_3"/>
+         </item>
+         <item>
+          <widget class="QComboBox" name="uiAddSignCombo_3"/>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="uiAddText_3"/>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_9">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>

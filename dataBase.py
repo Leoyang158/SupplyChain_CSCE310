@@ -13,8 +13,7 @@ password = '2235f9e7e2f3c4a1778c6dc71fd709d492b59563698615697430ebf7262767f1'
 
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
 cur = conn.cursor()
-
+cur.execute("SELECT * FROM orders LIMIT 1;")
 # using cur to execute the query here
-cur.execut
-# print(cur.fetchhone())
+print(cur.fetchone())
 
