@@ -1,8 +1,17 @@
-import sys
+import sys, psycopg2, csv
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
 
+class DataBase:
+    def __init__(self):
+        # DataBase API Keys
+        host = 'ec2-44-199-86-61.compute-1.amazonaws.com'
+        dbname = 'd9gadra8cohjt0'
+        user = 'jytzjupaqfytoj'
+        port = '5432'
+        password = '2235f9e7e2f3c4a1778c6dc71fd709d492b59563698615697430ebf7262767f1'
+        self.conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
 
 class MainPage(QtWidgets.QMainWindow):
     def __init__(self):
@@ -28,16 +37,19 @@ class MainPage(QtWidgets.QMainWindow):
         orderView = ResultPage()
         widget.addWidget(orderView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
+        # Make Query For Order
 
     def customerResult(self):
         customerView = ResultPage()
         widget.addWidget(customerView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
+        # Make Query For Customer
 
     def productResult(self):
         productView = ResultPage()
         widget.addWidget(productView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
+        # Make Query For Product
 
     def advancedQuery(self):
         advanceView = ResultPage()
