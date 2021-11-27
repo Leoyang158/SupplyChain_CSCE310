@@ -69,10 +69,10 @@
           </spacer>
          </item>
          <item>
-          <widget class="QComboBox" name="uiCustomerSign"/>
+          <widget class="QComboBox" name="uiCustomerColumn"/>
          </item>
          <item>
-          <widget class="QComboBox" name="uiCustomerColume"/>
+          <widget class="QComboBox" name="uiCustomerSign"/>
          </item>
          <item>
           <widget class="QLineEdit" name="uiCustomerText"/>
