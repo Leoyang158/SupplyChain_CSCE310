@@ -23,8 +23,11 @@ class DataBase:
 
     # One Condition
     def basicQuery(self, table, attr, symbol, attr_Input):
+        print("Making basic query 1")
         cur = self.conn.cursor()
-        queryStr = "SELECT * FROM " + table + " WHERE " + attr + " " + symbol + " " + attr_Input + " LIMIT 5;"
+        queryStr = "SELECT * FROM " + table + " WHERE " + attr + " " + symbol + " \'" + attr_Input + "\'"\
+                   + " LIMIT 5;"
+        # queryStr = "SELECT * FROM orders LIMIT 1;"
         print(queryStr)
         cur.execute(queryStr)
         # cur.execute("SELECT * FROM orders LIMIT 1;")
@@ -32,24 +35,27 @@ class DataBase:
 
     # Two Conditions
     def basicQuery2(self, table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input):
+        print("Making basic query 2")
         cur = self.conn.cursor()
-        queryStr = "SELECT * FROM " + table + " WHERE " + attr_1 + " " + symbol_1 + " " + attr_1_Input + " LIMIT 5;"
-        # "SELECT * FROM orders WHERE id = "188" AND
-        cur.execute("SELECT * FROM orders LIMIT 1;")
+        print(table)
+        queryStr = "SELECT * FROM " + table + " WHERE " + attr_1 + " " + symbol_1 + " " + "\'" + attr_1_Input + "\'"\
+                   + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + "LIMIT 5;"
+        print(queryStr)
+        # "SELECT * FROM orders WHERE id = "1360" AND name = "Smart watch" LIMIT 1;
+        cur.execute("SELECT * FROM orders WHERE id = \'1360\' AND name = \'Smart watch\' LIMIT 1")
         return cur.fetchone()
 
     # Advanced Query
 
 
 class MainPage(QtWidgets.QMainWindow):
-
+    # Make connection to Database
+    mainDB = DataBase()
     def __init__(self):
         # Loading UI Files
         super(MainPage, self).__init__()
         loadUi("mainPage.ui", self)
 
-        # Make connection to Database
-        self.mainDB = DataBase()
         # print(mainDB.makeQuery())
 
         # Components' Connection
@@ -166,19 +172,20 @@ class MainPage(QtWidgets.QMainWindow):
     def customerResult(self):
         # Make Query For Customer
         if self.uiCustomerAdd.text() == "+":
-            customerResult = self.mainDB.BasicQuery("customer", self.uiCustomerColumn.currentText(), self.uiCustomerSign.currentText(),
-                                                    self.uiCustomerText.text())
+            customerResult = MainPage.mainDB.basicQuery("customer", self.uiCustomerColumn.currentText(), self.uiCustomerSign.currentText(),
+                                                     self.uiCustomerText.text())
         else:
             if self.uiAddSignCombo.currentText() == "&":
                 sign = "AND"
             else:
                 sign = "OR"
-            customerResult = self.mainDB.BasicQuery2("customer", self.uiCustomerColumn.currentText(),
+            customerResult = MainPage.mainDB.basicQuery2("customer", self.uiCustomerColumn.currentText(),
                                                      self.uiCustomerSign.currentText(),
                                                      self.uiCustomerText.text(), self.uiAddAndCombo.currentText(),
                                                      self.uiAddAttributeCombo.currentText(),
                                                      sign,
                                                      self.uiAddText.text())
+        print(customerResult)
         customerView = ResultPage()
         widget.addWidget(customerView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
@@ -186,18 +193,20 @@ class MainPage(QtWidgets.QMainWindow):
     def orderResult(self):
         # Make Query For Order
         if self.uiOrderAdd.text() == "+":
-            orderResult = self.mainDB.BasicQuery("orders", self.uiOrderColumn.currentText(), self.uiOrderSign.currentText(),
-                                                 self.uiOrderText.text())
+            orderRes = MainPage.mainDB.basicQuery("orders", self.uiOrderColumn.currentText(), self.uiOrderSign.currentText(),
+                                              self.uiOrderText.text())
+            # orderRes = MainPage.mainDB.basicQuery()
         else:
             if self.uiAddSignCombo_2.currentText() == "&":
                 sign = "AND"
             else:
                 sign = "OR"
-            orderResult = self.mainDB.BasicQuery2("orders", self.uiOrderColumn.currentText(), self.uiOrderSign.currentText(),
-                                                  self.uiOrderText.text(), self.uiAddAndCombo_2.currentText(),
-                                                  self.uiAddAttributeCombo_2.currentText(),
-                                                  sign,
-                                                  self.uiAddText_2.text())
+            orderRes = MainPage.mainDB.basicQuery2("orders", self.uiOrderColumn.currentText(), self.uiOrderSign.currentText(),
+                                               self.uiOrderText.text(), self.uiAddAndCombo_2.currentText(),
+                                               self.uiAddAttributeCombo_2.currentText(),
+                                               sign,
+                                               self.uiAddText_2.text())
+        print(orderRes)
         orderView = ResultPage()
         widget.addWidget(orderView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
@@ -205,29 +214,29 @@ class MainPage(QtWidgets.QMainWindow):
     def productResult(self):
         # Make Query For Product
         if self.uiProductAdd.text() == "+":
-            productResult = self.mainDB.BasicQuery("product", self.uiProductColumn.currentText(), self.uiProductSign.currentText(),
-                                                   self.uiProductText.text())
+            productRes = MainPage.mainDB.basicQuery("product", self.uiProductColumn.currentText(), self.uiProductSign.currentText(),
+                                                           self.uiProductText.text())
         else:
             if self.uiAddSignCombo_2.currentText() == "&":
                 sign = "AND"
             else:
                 sign = "OR"
-            productResult = self.mainDB.BasicQuery2("product", self.uiProductColumn.currentText(),
-                                                    self.uiProductSign.currentText(),
-                                                    self.uiProductText.text(), self.uiAddAndCombo_3.currentText(),
-                                                    self.uiAddAttributeCombo_3.currentText(),
-                                                    sign,
-                                                    self.uiAddText_3.text())
+            print("This sign is " + sign)
+            productRes = MainPage.mainDB.basicQuery2("product", self.uiProductColumn.currentText(),
+                                                 self.uiProductSign.currentText(),
+                                                 self.uiProductText.text(), self.uiAddAndCombo_3.currentText(),
+                                                 self.uiAddAttributeCombo_3.currentText(),
+                                                 sign,
+                                                 self.uiAddText_3.text())
+        print(productRes)
         productView = ResultPage()
         widget.addWidget(productView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
-
 
     def advancedQuery(self):
         advanceView = ResultPage()
         widget.addWidget(advanceView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
-
 
 class AdvancedPage(QtWidgets.QMainWindow):
     def __init__(self):
