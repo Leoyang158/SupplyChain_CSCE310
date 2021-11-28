@@ -47,39 +47,99 @@ class DataBase:
 
     # Advanced Query
     def fraud_query(self, country1, country2):
-        pass 
+        cur = self.conn.cursor()
+        query_str = "select product.name, count(product.name) from product join (\
+		            select * from orders join customer on orders.customer_id = customer.id where\
+		            orders.country = \'" + country1 + "\' and customer.country = \'" + country2 + "\' \
+                    and orders.shipping_real > shipping_planned) as orders_filtered \
+	                on product.id = orders_filtered.product_id group by product.name;" 
+        cur.execute(query_str)
+        return cur.fetchone()
+
+ 
 
     def order_status(self, country1, country2):
-        pass 
+        cur = self.conn.cursor()
+        query_str = "select order_status, count(order_status) from orders join customer on \
+	                orders.customer_id = customer.id where orders.country = \'" + country1 + "\' \
+                    and customer.country = \'" + country2 + "\' group by order_status;" 
+        cur.execute(query_str)
+        return cur.fetchone()
 
     def product_counts(self, country1, country2):
-        pass 
+        curr = self.conn.cursor()
+        query_str = "select product.name, count(product.name) from product join ( \
+	                select * from orders join customer on orders.customer_id = customer.id \
+		            where orders.country = \'" + country1 + "\' and customer.country = \'" + country2 + "\' \
+                    as orders_filtered on product.id = orders_filtered.product_id group by product.name;"
+        
+        curr.execute(query_str)
+        return curr.fetchone()
 
     def goods_count(self, country1, country2):
-        pass 
+        curr = self.conn.cursor()
+        query_str = "select product.category, count(product.category) from product join ( \
+	                select * from orders join customer on orders.customer_id = customer.id \
+		            where orders.country = \'" + country1 + "\' and customer.country = \'" + country2 + "\' \
+                    ) as orders_filtered on product.id = orders_filtered.product_id group by product.category;"
+        curr.execute(query_str)
+        return curr.fetchone()
 
     def country_count_product(self, product):
-        pass 
+        curr = self.conn.cursor()
+        query_str = "select country, count(country) from product join orders \
+	                on product.id = orders.product_id where product.name = \'" + product + \
+                    "\' group by country;"
+        
+        curr.execute(query_str)
+        return curr.fetchone()
 
     def customer_country_count_product(self, product):
-        pass
+        curr = self.conn.cursor()
+        query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
+	                select customer.country, orders.product_id from orders join customer on \
+		            orders.customer_id = customer.id ) as orders_filtered on product.id = orders_filtered.product_id \
+	                where product.name = \'" + product + "\' group by orders_filtered.country;"
+        
+        curr.execute(query_str)
+        return curr.fetchone()
 
     def country_count_status(self, status):
-        pass 
+        curr = self.conn.cursor()
+        query_str = "select country, count(country) from orders where order_status = \' " + status + "\' \
+                    group by country;"
+    
+        curr.execute(query_str)
+        return curr.fetchone()
 
     def customer_country_count_status(self, status):
-        pass
+        curr = self.conn.cursor()
+        query_str = "select customer.country, count(customer.country) from orders join customer \
+	                on orders.customer_id = customer.id where order_status = \' " + status + "\' \
+	                group by customer.country; "
+
+        curr.execute(query_str)
+        return curr.fetchone()
+	
 
     def country_count_good_to(self, category):
-        pass 
+        curr = self.conn.cursor()
+        query_str = "select country, count(country) from orders join product \
+            on orders.product_id = product.id where category = \' " + category + "\' \
+            group by country;"  
+        
+        curr.execute(query_str)
+        return curr.fetchone()
 
     def country_count_good_from(self, category):
-        pass
-
-
-
-    
-
+        curr = self.conn.cursor()
+        query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
+	                select customer.country, orders.product_id from orders join customer on \
+		            orders.customer_id = customer.id ) as orders_filtered on product.id = orders_filtered.product_id \
+	                where product.category = \' " + category + "\' group by orders_filtered.country;"
+        
+        curr.execute(query_str)
+        return curr.fetchone()
 
 class MainPage(QtWidgets.QMainWindow):
     # Make connection to Database
@@ -267,6 +327,10 @@ class MainPage(QtWidgets.QMainWindow):
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def advancedQuery(self):
+        print(MainPage.mainDB.fraud_query("Indonesia", "Puerto Rico"))
+        print(MainPage.mainDB.order_status("Indonesia", "Puerto Rico"))
+        print(MainPage.mainDB.country_count_good_from("Electronics"))
+        print(MainPage.mainDB.country_count_product("Baby Sweater"))
         advanceView = ResultPage()
         widget.addWidget(advanceView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
