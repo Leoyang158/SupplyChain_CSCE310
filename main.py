@@ -46,6 +46,39 @@ class DataBase:
         return cur.fetchone()
 
     # Advanced Query
+    def fraud_query(self, country1, country2):
+        pass 
+
+    def order_status(self, country1, country2):
+        pass 
+
+    def product_counts(self, country1, country2):
+        pass 
+
+    def goods_count(self, country1, country2):
+        pass 
+
+    def country_count_product(self, product):
+        pass 
+
+    def customer_country_count_product(self, product):
+        pass
+
+    def country_count_status(self, status):
+        pass 
+
+    def customer_country_count_status(self, status):
+        pass
+
+    def country_count_good_to(self, category):
+        pass 
+
+    def country_count_good_from(self, category):
+        pass
+
+
+
+    
 
 
 class MainPage(QtWidgets.QMainWindow):
