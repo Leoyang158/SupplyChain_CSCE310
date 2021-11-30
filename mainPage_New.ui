@@ -14,13 +14,13 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>20</y>
-      <width>542</width>
-      <height>369</height>
+      <x>111</x>
+      <y>21</y>
+      <width>494</width>
+      <height>339</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -422,45 +422,103 @@
       </layout>
      </item>
      <item>
+      <widget class="QLabel" name="advanceTitle">
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;
+font: 12pt &quot;MS Sans Serif&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Advanced Queries</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="advanceTitle">
-         <property name="styleSheet">
-          <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;
-font: 12pt &quot;MS Sans Serif&quot;;</string>
-         </property>
-         <property name="text">
-          <string>Advanced Queries</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Make your selection</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_20">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>88</width>
+             <height>19</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox"/>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QPushButton" name="uiFraud">
-           <property name="text">
-            <string>Fraud %</string>
+          <spacer name="horizontalSpacer_19">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-          </widget>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="uiTopGoodDest">
-           <property name="text">
-            <string>Top Goods (Dest)</string>
+          <spacer name="horizontalSpacer_18">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-          </widget>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="uiTopGoodLocal">
-           <property name="text">
-            <string>TopGoods (Local)</string>
+          <spacer name="horizontalSpacer_16">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-          </widget>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>33</width>
+             <height>19</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="uiTopDest">
+          <spacer name="horizontalSpacer_17">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton">
            <property name="text">
-            <string>Top Destination</string>
+            <string>Search</string>
            </property>
           </widget>
          </item>
