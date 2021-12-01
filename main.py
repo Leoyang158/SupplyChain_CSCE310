@@ -40,7 +40,7 @@ class DataBase:
         print(queryStr)
         cur.execute(queryStr)
         # cur.execute("SELECT * FROM orders LIMIT 1;")
-        return cur.fetchone()
+        return cur.fetchall()
 
     # Two Conditions
     def basicQuery2(self, table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input):
@@ -48,10 +48,10 @@ class DataBase:
         cur = self.conn.cursor()
         print(table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr_1 + " " + symbol_1 + " " + "\'" + attr_1_Input + "\'"\
-                   + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + " LIMIT 5;"
+                   + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + ";"
         print(queryStr)
         cur.execute(queryStr)
-        return cur.fetchone()
+        return cur.fetchall()
 
     # Advanced Query
     # Fraud
@@ -305,6 +305,7 @@ class MainPage(QtWidgets.QMainWindow):
                                                      self.uiAddSignCombo.currentText(),
                                                      self.uiAddText.text())
         print(customerResult)
+        # making table
         customerView = ResultPage()
         widget.addWidget(customerView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
@@ -326,6 +327,7 @@ class MainPage(QtWidgets.QMainWindow):
                                                self.uiAddSignCombo_2.currentText(),
                                                self.uiAddText_2.text())
         print(orderRes)
+        # making table
         orderView = ResultPage()
         widget.addWidget(orderView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
@@ -348,6 +350,7 @@ class MainPage(QtWidgets.QMainWindow):
                                                  self.uiAddSignCombo_3.currentText(),
                                                  self.uiAddText_3.text())
         print(productRes)
+        # making table
         productView = ResultPage()
         widget.addWidget(productView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
@@ -385,7 +388,10 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
             self.uiAdvancedInput1.setText("Category")
-
+    def make_table(self, sql_output):
+        print("hello world")
+    def make_graph(self, sql_output):
+        print("hello world")
     def advancedResult(self):
         if self.selection == "Fraud":
             data = self.invoke_fraud()
