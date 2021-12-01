@@ -9,6 +9,15 @@ Customer_Attribute = ['id', 'city', 'country', 'state', 'department', 'zipcode']
 Order_Attribute = ['type', 'shipping_real', 'shipping_planned', 'delivery_satus', 'customer_id', 'city', 'country',
                    'data', 'id','quantity', 'region', 'state', 'order_status', 'product_id']
 Product_Attribute = ['id', 'name', 'category', 'price']
+AdvancedSelections = ['Lasted Product', 'Fraud', 'Order Status', 'Product Counts','Category of Good Counts',
+                      'Count of Countries Product (GO)', 'Count of Countries Product (Come)',
+                      'Count of Countries Specific Order Status',
+                      'Count of customer countries specific order status',
+                      'count of countries specific category with specific order status',
+                      'count of countries specific category of goods (Go)',
+                      'count of countries specific category of goods (Come)'
+                      ]
+
 
 class DataBase:
     def __init__(self):
@@ -144,7 +153,7 @@ class MainPage(QtWidgets.QMainWindow):
     def __init__(self):
         # Loading UI Files
         super(MainPage, self).__init__()
-        loadUi("mainPage.ui", self)
+        loadUi("mainPage_New.ui", self)
 
         # print(mainDB.makeQuery())
 
@@ -152,13 +161,15 @@ class MainPage(QtWidgets.QMainWindow):
         self.uiOrderSubmit.clicked.connect(self.orderResult)
         self.uiCustomerSubmit.clicked.connect(self.customerResult)
         self.uiProductSubmit.clicked.connect(self.productResult)
-        self.uiFraud.clicked.connect(self.advancedQuery)
+        self.uiAdvancedPopUp.clicked.connect(self.advancedQuery)
         self.uiCustomerAdd.clicked.connect(self.addCustomer)
         self.uiOrderAdd.clicked.connect(self.addOrder)
         self.uiProductAdd.clicked.connect(self.addProduct)
 
-        # Add Selection on ComboBox
-        # Customer
+        for i in AdvancedSelections:
+            if i != "End":
+                self.uiAdvancedQueriesSelection.addItem(i)
+
         for i in Customer_Attribute:
             if i != "End":
                 self.uiCustomerColumn.addItem(i)
@@ -324,26 +335,27 @@ class MainPage(QtWidgets.QMainWindow):
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def advancedQuery(self):
-        print(MainPage.mainDB.fraud_query("Indonesia", "Puerto Rico"))
-        print(MainPage.mainDB.order_status("Indonesia", "Puerto Rico"))
-        print(MainPage.mainDB.country_count_good_from("Electronics"))
-        print(MainPage.mainDB.country_count_product("Baby Sweater"))
-        advanceView = ResultPage()
+        # print(MainPage.mainDB.fraud_query("Indonesia", "Puerto Rico"))
+        # print(MainPage.mainDB.order_status("Indonesia", "Puerto Rico"))
+        # print(MainPage.mainDB.country_count_good_from("Electronics"))
+        # print(MainPage.mainDB.country_count_product("Baby Sweater"))
+        advanceView = AdvancedPage(self.uiAdvancedQueriesSelection.currentText())
         widget.addWidget(advanceView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
+
 class AdvancedPage(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, querySelection):
         # Loading UI Files
         super(AdvancedPage, self).__init__()
-        loadUi("advancedQuery.ui", self)
-
+        loadUi("advancedQuery_new.ui", self)
+        print(querySelection)
         # Components' Connection
         self.uiSubmitAdvanced.clicked.connect(self.advancedResult)
 
     def advancedResult(self):
-        resview = ResultPage()
-        widget.addWidget(resview)
+        resView = ResultPage()
+        widget.addWidget(resView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
 

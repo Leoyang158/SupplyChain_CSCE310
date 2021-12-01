@@ -14,17 +14,17 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>30</y>
-      <width>377</width>
-      <height>162</height>
+      <y>21</y>
+      <width>541</width>
+      <height>171</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
       <widget class="QLabel" name="AdvancedQueryTitle">
        <property name="font">
         <font>
@@ -32,11 +32,11 @@
         </font>
        </property>
        <property name="text">
-        <string>Advanced Query Pop Up</string>
+        <string>Advanced Query </string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="0">
       <widget class="QLabel" name="NeededValueTitle">
        <property name="font">
         <font>
@@ -48,10 +48,14 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="2" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QComboBox" name="uiValue1"/>
+        <widget class="QLabel" name="uiAdvancedInput1">
+         <property name="text">
+          <string>First Country</string>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer">
@@ -67,18 +71,22 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLineEdit" name="uiOptionalValue3">
+        <widget class="QLineEdit" name="uiInput1">
          <property name="text">
-          <string>eg. country1</string>
+          <string/>
          </property>
         </widget>
        </item>
       </layout>
      </item>
-     <item>
+     <item row="3" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QComboBox" name="uiOptionalValue1"/>
+        <widget class="QLabel" name="uiAdvancedInput2">
+         <property name="text">
+          <string>Second Country</string>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_2">
@@ -94,15 +102,15 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLineEdit" name="uiOptionalValue3_2">
+        <widget class="QLineEdit" name="uiInput2">
          <property name="text">
-          <string>eg. coutry2</string>
+          <string/>
          </property>
         </widget>
        </item>
       </layout>
      </item>
-     <item>
+     <item row="4" column="0">
       <widget class="QPushButton" name="uiSubmitAdvanced">
        <property name="text">
         <string>Submit</string>
