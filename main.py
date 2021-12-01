@@ -9,14 +9,14 @@ Customer_Attribute = ['id', 'city', 'country', 'state', 'department', 'zipcode']
 Order_Attribute = ['type', 'shipping_real', 'shipping_planned', 'delivery_satus', 'customer_id', 'city', 'country',
                    'data', 'id','quantity', 'region', 'state', 'order_status', 'product_id']
 Product_Attribute = ['id', 'name', 'category', 'price']
-AdvancedSelections = ['Lasted Product', 'Fraud', 'Order Status', 'Product Counts','Category of Good Counts',
+AdvancedSelections = ['Fraud', 'Order Status', 'Product Counts','Good Counts',
                       'Count of Countries Product (GO)', 'Count of Countries Product (Come)',
                       'Count of Countries Specific Order Status',
-                      'Count of customer countries specific order status',
-                      'count of countries specific category with specific order status',
-                      'count of countries specific category of goods (Go)',
-                      'count of countries specific category of goods (Come)'
+                      'Count of Customer Countries Specific Order Status',
+                      'Count of countries specific category of goods (Go)',
+                      'Count of countries specific category of goods (Come)'
                       ]
+# Advanced Query: 'Lasted Product'
 
 
 class DataBase:
@@ -54,6 +54,8 @@ class DataBase:
         return cur.fetchone()
 
     # Advanced Query
+    # Fraud
+    # done
     def fraud_query(self, country1, country2):
         cur = self.conn.cursor()
         query_str = "select product.name, count(product.name) from product join (\
@@ -64,6 +66,7 @@ class DataBase:
         cur.execute(query_str)
         return cur.fetchone()
 
+    # done
     def order_status(self, country1, country2):
         cur = self.conn.cursor()
         query_str = "select order_status, count(order_status) from orders join customer on \
@@ -72,6 +75,7 @@ class DataBase:
         cur.execute(query_str)
         return cur.fetchone()
 
+    # done
     def product_counts(self, country1, country2):
         curr = self.conn.cursor()
         query_str = "select product.name, count(product.name) from product join ( \
@@ -82,6 +86,7 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+    # done
     def goods_count(self, country1, country2):
         curr = self.conn.cursor()
         query_str = "select product.category, count(product.category) from product join ( \
@@ -91,6 +96,7 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+    # done
     def country_count_product(self, product):
         curr = self.conn.cursor()
         query_str = "select country, count(country) from product join orders \
@@ -100,6 +106,7 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+    # done
     def customer_country_count_product(self, product):
         curr = self.conn.cursor()
         query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
@@ -110,6 +117,7 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+    # done
     def country_count_status(self, status):
         curr = self.conn.cursor()
         query_str = "select country, count(country) from orders where order_status = \' " + status + "\' \
@@ -118,6 +126,7 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+    # done
     def customer_country_count_status(self, status):
         curr = self.conn.cursor()
         query_str = "select customer.country, count(customer.country) from orders join customer \
@@ -127,6 +136,7 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+    # done
     def country_count_good_to(self, category):
         curr = self.conn.cursor()
         query_str = "select country, count(country) from orders join product \
@@ -136,6 +146,7 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+    # done
     def country_count_good_from(self, category):
         curr = self.conn.cursor()
         query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
@@ -349,14 +360,79 @@ class AdvancedPage(QtWidgets.QMainWindow):
         # Loading UI Files
         super(AdvancedPage, self).__init__()
         loadUi("advancedQuery_new.ui", self)
-        print(querySelection)
+        # print(querySelection)
+        self.selection = querySelection
         # Components' Connection
         self.uiSubmitAdvanced.clicked.connect(self.advancedResult)
 
+        # Hide and Change text
+        if self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
+            self.uiInput2.setVisible(False)
+            self.uiAdvancedInput2.setVisible(False)
+            self.uiAdvancedInput1.setText("Product")
+        if self.selection == "Count of Countries Specific Order Status" or self.selection == "Count of Customer Countries Specific Order Status":
+            self.uiInput2.setVisible(False)
+            self.uiAdvancedInput2.setVisible(False)
+            self.uiAdvancedInput1.setText("Status")
+        if self.selection == "Count of countries specific category of goods (Go)" or self.selection == "Count of countries specific category of goods (Come)":
+            self.uiInput2.setVisible(False)
+            self.uiAdvancedInput2.setVisible(False)
+            self.uiAdvancedInput1.setText("Category")
+
     def advancedResult(self):
+        if self.selection == "Fraud":
+            self.invoke_fraud()
+        elif self.selection == "Order Status":
+            self.invoke_Order_Status()
+        elif self.selection == "Product Counts":
+            self.invoke_Product_Counts()
+        elif self.selection == "Good Counts":
+            self.invoke_Good_Counts()
+        elif self.selection == "Count of Countries Product (GO)":
+            self.invoke_Country_Count_Product()
+        elif self.selection == "Count of Countries Product (Come)":
+            self.invoke_Customer_Country_Count_Product()
+        elif self.selection == "Count of Countries Specific Order Status":
+            self.invoke_invoke_Country_Count_Status()
+        elif self.selection == "Count of Customer Countries Specific Order Status":
+            self.invoke_Customer_Country_Count_Status()
+        elif self.selection == "Count of countries specific category of goods (Go)":
+            self.invoke_Country_Count_Good_To()
+        elif self.selection == "Count of countries specific category of goods (Come)":
+            self.invoke_Country_Count_Good_From()
         resView = ResultPage()
         widget.addWidget(resView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def invoke_fraud(self):
+        return MainPage.mainDB.fraud_query(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Order_Status(self):
+        return MainPage.mainDB.order_status(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Product_Counts(self):
+        return MainPage.mainDB.product_counts(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Good_Counts(self):
+        return MainPage.mainDB.goods_count(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Country_Count_Product(self):
+        return MainPage.mainDB.country_count_product(self.uiInput1.text())
+
+    def invoke_Customer_Country_Count_Product(self):
+        return MainPage.mainDB.customer_country_count_product(self.uiInput1.text())
+
+    def invoke_Country_Count_Status(self):
+        return MainPage.mainDB.country_count_status(self.uiInput1.text())
+
+    def invoke_Customer_Country_Count_Status(self):
+        return MainPage.mainDB.customer_country_count_status(self.uiInput1.text())
+
+    def invoke_Country_Count_Good_To(self):
+        return MainPage.mainDB.country_count_good_to(self.uiInput1.text())
+
+    def invoke_Country_Count_Good_From(self):
+        return MainPage.mainDB.country_count_good_from(self.uiInput1.text())
 
 
 class ResultPage(QtWidgets.QMainWindow):
