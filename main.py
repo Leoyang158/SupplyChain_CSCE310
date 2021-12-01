@@ -305,10 +305,12 @@ class MainPage(QtWidgets.QMainWindow):
                                                      self.uiAddSignCombo.currentText(),
                                                      self.uiAddText.text())
         print(customerResult)
-        # making table
-        customerView = ResultPage()
-        widget.addWidget(customerView)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # customerView = ResultPage()
+        # widget.addWidget(customerView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def orderResult(self):
         # Make Query For Order
@@ -327,10 +329,12 @@ class MainPage(QtWidgets.QMainWindow):
                                                self.uiAddSignCombo_2.currentText(),
                                                self.uiAddText_2.text())
         print(orderRes)
-        # making table
-        orderView = ResultPage()
-        widget.addWidget(orderView)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # orderView = ResultPage()
+        # widget.addWidget(orderView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def productResult(self):
         # Make Query For Product
@@ -350,10 +354,12 @@ class MainPage(QtWidgets.QMainWindow):
                                                  self.uiAddSignCombo_3.currentText(),
                                                  self.uiAddText_3.text())
         print(productRes)
-        # making table
-        productView = ResultPage()
-        widget.addWidget(productView)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # productView = ResultPage()
+        # widget.addWidget(productView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def advancedQuery(self):
         # print(MainPage.mainDB.fraud_query("Indonesia", "Puerto Rico"))
@@ -374,7 +380,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
         self.selection = querySelection
         # Components' Connection
         self.uiSubmitAdvanced.clicked.connect(self.advancedResult)
-
+        self.uiAdvancedBack.clicked.connect(self.backToMain)
         # Hide and Change text
         if self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
             self.uiInput2.setVisible(False)
@@ -388,10 +394,18 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
             self.uiAdvancedInput1.setText("Category")
+
+
     def make_table(self, sql_output):
         print("hello world")
+
     def make_graph(self, sql_output):
         print("hello world")
+
+    def backToMain(self):
+        # print("qwe")
+        widget.setCurrentIndex(widget.currentIndex() - 1)
+
     def advancedResult(self):
         if self.selection == "Fraud":
             data = self.invoke_fraud()
@@ -414,9 +428,12 @@ class AdvancedPage(QtWidgets.QMainWindow):
         elif self.selection == "Count of countries specific category of goods (Come)":
             data = self.invoke_Country_Count_Good_From()
         print(data)
-        resView = ResultPage()
-        widget.addWidget(resView)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # resView = ResultPage()
+        # widget.addWidget(resView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def invoke_fraud(self):
         return MainPage.mainDB.fraud_query(self.uiInput1.text(), self.uiInput2.text())
