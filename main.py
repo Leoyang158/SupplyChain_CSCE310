@@ -56,6 +56,13 @@ class DataBase:
     # Advanced Query
     # Fraud
     # done
+
+    def LastedProduct(self):
+        cur = self.conn.cursor()
+        query_str = ""
+        cur.execute(query_str)
+        return cur.fetchone()
+
     def fraud_query(self, country1, country2):
         cur = self.conn.cursor()
         query_str = "select product.name, count(product.name) from product join (\
@@ -381,25 +388,26 @@ class AdvancedPage(QtWidgets.QMainWindow):
 
     def advancedResult(self):
         if self.selection == "Fraud":
-            self.invoke_fraud()
+            data = self.invoke_fraud()
         elif self.selection == "Order Status":
-            self.invoke_Order_Status()
+            data = self.invoke_Order_Status()
         elif self.selection == "Product Counts":
-            self.invoke_Product_Counts()
+            data = self.invoke_Product_Counts()
         elif self.selection == "Good Counts":
-            self.invoke_Good_Counts()
+            data = self.invoke_Good_Counts()
         elif self.selection == "Count of Countries Product (GO)":
-            self.invoke_Country_Count_Product()
+            data = self.invoke_Country_Count_Product()
         elif self.selection == "Count of Countries Product (Come)":
-            self.invoke_Customer_Country_Count_Product()
+            data = self.invoke_Customer_Country_Count_Product()
         elif self.selection == "Count of Countries Specific Order Status":
-            self.invoke_invoke_Country_Count_Status()
+            data = self.invoke_invoke_Country_Count_Status()
         elif self.selection == "Count of Customer Countries Specific Order Status":
-            self.invoke_Customer_Country_Count_Status()
+            data = self.invoke_Customer_Country_Count_Status()
         elif self.selection == "Count of countries specific category of goods (Go)":
-            self.invoke_Country_Count_Good_To()
+            data = self.invoke_Country_Count_Good_To()
         elif self.selection == "Count of countries specific category of goods (Come)":
-            self.invoke_Country_Count_Good_From()
+            data = self.invoke_Country_Count_Good_From()
+        print(data)
         resView = ResultPage()
         widget.addWidget(resView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
