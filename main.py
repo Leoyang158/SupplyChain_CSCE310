@@ -10,6 +10,15 @@ Customer_Attribute = ['id', 'city', 'country', 'state', 'department', 'zipcode']
 Order_Attribute = ['type', 'shipping_real', 'shipping_planned', 'delivery_satus', 'customer_id', 'city', 'country',
                    'data', 'id','quantity', 'region', 'state', 'order_status', 'product_id']
 Product_Attribute = ['id', 'name', 'category', 'price']
+AdvancedSelections = ['Fraud', 'Order Status', 'Product Counts','Good Counts',
+                      'Count of Countries Product (GO)', 'Count of Countries Product (Come)',
+                      'Count of Countries Specific Order Status',
+                      'Count of Customer Countries Specific Order Status',
+                      'Count of countries specific category of goods (Go)',
+                      'Count of countries specific category of goods (Come)'
+                      ]
+# Advanced Query: 'Lasted Product'
+
 
 class DataBase:
     def __init__(self):
@@ -41,19 +50,18 @@ class DataBase:
         print(queryStr)
         cur.execute(queryStr)
         # cur.execute("SELECT * FROM orders LIMIT 1;")
-        return cur.fetchone()
+        return cur.fetchall()
 
     # Two Conditions
     def basicQuery2(self, table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input):
         print("Making basic query 2")
         cur = self.conn.cursor()
-        print(table)
+        print(table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr_1 + " " + symbol_1 + " " + "\'" + attr_1_Input + "\'"\
-                   + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + "LIMIT 5;"
+                   + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + ";"
         print(queryStr)
-        # "SELECT * FROM orders WHERE id = "1360" AND name = "Smart watch" LIMIT 1;
-        cur.execute("SELECT * FROM orders WHERE id = \'1360\' AND name = \'Smart watch\' LIMIT 1")
-        return cur.fetchone()
+        cur.execute(queryStr)
+        return cur.fetchall()
 
     # Advanced Query
     def late_query(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
@@ -197,7 +205,6 @@ class DataBase:
         query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
-	
 
     def country_count_good_to(self, category, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
@@ -231,13 +238,14 @@ class DataBase:
         curr.execute(query_str)
         return curr.fetchone()
 
+
 class MainPage(QtWidgets.QMainWindow):
     # Make connection to Database
     mainDB = DataBase()
     def __init__(self):
         # Loading UI Files
         super(MainPage, self).__init__()
-        loadUi("mainPage.ui", self)
+        loadUi("mainPage_New.ui", self)
 
         # print(mainDB.makeQuery())
 
@@ -245,13 +253,15 @@ class MainPage(QtWidgets.QMainWindow):
         self.uiOrderSubmit.clicked.connect(self.orderResult)
         self.uiCustomerSubmit.clicked.connect(self.customerResult)
         self.uiProductSubmit.clicked.connect(self.productResult)
-        self.uiFraud.clicked.connect(self.advancedQuery)
+        self.uiAdvancedPopUp.clicked.connect(self.advancedQuery)
         self.uiCustomerAdd.clicked.connect(self.addCustomer)
         self.uiOrderAdd.clicked.connect(self.addOrder)
         self.uiProductAdd.clicked.connect(self.addProduct)
 
-        # Add Selection on ComboBox
-        # Customer
+        for i in AdvancedSelections:
+            if i != "End":
+                self.uiAdvancedQueriesSelection.addItem(i)
+
         for i in Customer_Attribute:
             if i != "End":
                 self.uiCustomerColumn.addItem(i)
@@ -358,20 +368,23 @@ class MainPage(QtWidgets.QMainWindow):
             customerResult = MainPage.mainDB.basicQuery("customer", self.uiCustomerColumn.currentText(), self.uiCustomerSign.currentText(),
                                                      self.uiCustomerText.text())
         else:
-            if self.uiAddSignCombo.currentText() == "&":
+            if self.uiAddAndCombo.currentText() == "&":
                 sign = "AND"
             else:
                 sign = "OR"
             customerResult = MainPage.mainDB.basicQuery2("customer", self.uiCustomerColumn.currentText(),
                                                      self.uiCustomerSign.currentText(),
-                                                     self.uiCustomerText.text(), self.uiAddAndCombo.currentText(),
+                                                     self.uiCustomerText.text(), sign,
                                                      self.uiAddAttributeCombo.currentText(),
-                                                     sign,
+                                                     self.uiAddSignCombo.currentText(),
                                                      self.uiAddText.text())
         print(customerResult)
-        customerView = ResultPage()
-        widget.addWidget(customerView)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # customerView = ResultPage()
+        # widget.addWidget(customerView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def orderResult(self):
         # Make Query For Order
@@ -380,19 +393,22 @@ class MainPage(QtWidgets.QMainWindow):
                                               self.uiOrderText.text())
             # orderRes = MainPage.mainDB.basicQuery()
         else:
-            if self.uiAddSignCombo_2.currentText() == "&":
+            if self.uiAddAndCombo_2.currentText() == "&":
                 sign = "AND"
             else:
                 sign = "OR"
             orderRes = MainPage.mainDB.basicQuery2("orders", self.uiOrderColumn.currentText(), self.uiOrderSign.currentText(),
-                                               self.uiOrderText.text(), self.uiAddAndCombo_2.currentText(),
+                                               self.uiOrderText.text(), sign,
                                                self.uiAddAttributeCombo_2.currentText(),
-                                               sign,
+                                               self.uiAddSignCombo_2.currentText(),
                                                self.uiAddText_2.text())
         print(orderRes)
-        orderView = ResultPage()
-        widget.addWidget(orderView)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # orderView = ResultPage()
+        # widget.addWidget(orderView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def productResult(self):
         # Make Query For Product
@@ -400,44 +416,128 @@ class MainPage(QtWidgets.QMainWindow):
             productRes = MainPage.mainDB.basicQuery("product", self.uiProductColumn.currentText(), self.uiProductSign.currentText(),
                                                            self.uiProductText.text())
         else:
-            if self.uiAddSignCombo_2.currentText() == "&":
+            if self.uiAddAndCombo_3.currentText() == "&":
                 sign = "AND"
             else:
                 sign = "OR"
             print("This sign is " + sign)
             productRes = MainPage.mainDB.basicQuery2("product", self.uiProductColumn.currentText(),
                                                  self.uiProductSign.currentText(),
-                                                 self.uiProductText.text(), self.uiAddAndCombo_3.currentText(),
+                                                 self.uiProductText.text(), sign,
                                                  self.uiAddAttributeCombo_3.currentText(),
-                                                 sign,
+                                                 self.uiAddSignCombo_3.currentText(),
                                                  self.uiAddText_3.text())
         print(productRes)
-        productView = ResultPage()
-        widget.addWidget(productView)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # productView = ResultPage()
+        # widget.addWidget(productView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def advancedQuery(self):
-        print(MainPage.mainDB.fraud_query("Indonesia", "Puerto Rico"))
-        print(MainPage.mainDB.order_status("Indonesia", "Puerto Rico"))
-        print(MainPage.mainDB.country_count_good_from("Electronics"))
-        print(MainPage.mainDB.country_count_product("Baby Sweater"))
-        advanceView = ResultPage()
+        # print(MainPage.mainDB.fraud_query("Indonesia", "Puerto Rico"))
+        # print(MainPage.mainDB.order_status("Indonesia", "Puerto Rico"))
+        # print(MainPage.mainDB.country_count_good_from("Electronics"))
+        # print(MainPage.mainDB.country_count_product("Baby Sweater"))
+        advanceView = AdvancedPage(self.uiAdvancedQueriesSelection.currentText())
         widget.addWidget(advanceView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
+
 class AdvancedPage(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, querySelection):
         # Loading UI Files
         super(AdvancedPage, self).__init__()
-        loadUi("advancedQuery.ui", self)
-
+        loadUi("advancedQuery_new.ui", self)
+        # print(querySelection)
+        self.selection = querySelection
         # Components' Connection
         self.uiSubmitAdvanced.clicked.connect(self.advancedResult)
+        self.uiAdvancedBack.clicked.connect(self.backToMain)
+        # Hide and Change text
+        if self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
+            self.uiInput2.setVisible(False)
+            self.uiAdvancedInput2.setVisible(False)
+            self.uiAdvancedInput1.setText("Product")
+        if self.selection == "Count of Countries Specific Order Status" or self.selection == "Count of Customer Countries Specific Order Status":
+            self.uiInput2.setVisible(False)
+            self.uiAdvancedInput2.setVisible(False)
+            self.uiAdvancedInput1.setText("Status")
+        if self.selection == "Count of countries specific category of goods (Go)" or self.selection == "Count of countries specific category of goods (Come)":
+            self.uiInput2.setVisible(False)
+            self.uiAdvancedInput2.setVisible(False)
+            self.uiAdvancedInput1.setText("Category")
+
+
+    def make_table(self, sql_output):
+        print("hello world")
+
+    def make_graph(self, sql_output):
+        print("hello world")
+
+    def backToMain(self):
+        # print("qwe")
+        widget.setCurrentIndex(widget.currentIndex() - 1)
 
     def advancedResult(self):
-        resview = ResultPage()
-        widget.addWidget(resview)
-        widget.setCurrentIndex(widget.currentIndex() + 1)
+        if self.selection == "Fraud":
+            data = self.invoke_fraud()
+        elif self.selection == "Order Status":
+            data = self.invoke_Order_Status()
+        elif self.selection == "Product Counts":
+            data = self.invoke_Product_Counts()
+        elif self.selection == "Good Counts":
+            data = self.invoke_Good_Counts()
+        elif self.selection == "Count of Countries Product (GO)":
+            data = self.invoke_Country_Count_Product()
+        elif self.selection == "Count of Countries Product (Come)":
+            data = self.invoke_Customer_Country_Count_Product()
+        elif self.selection == "Count of Countries Specific Order Status":
+            data = self.invoke_invoke_Country_Count_Status()
+        elif self.selection == "Count of Customer Countries Specific Order Status":
+            data = self.invoke_Customer_Country_Count_Status()
+        elif self.selection == "Count of countries specific category of goods (Go)":
+            data = self.invoke_Country_Count_Good_To()
+        elif self.selection == "Count of countries specific category of goods (Come)":
+            data = self.invoke_Country_Count_Good_From()
+        print(data)
+        # the advanced output is here....
+        # call the function to create table or graph
+
+        # resView = ResultPage()
+        # widget.addWidget(resView)
+        # widget.setCurrentIndex(widget.currentIndex() + 1)
+
+    def invoke_fraud(self):
+        return MainPage.mainDB.fraud_query(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Order_Status(self):
+        return MainPage.mainDB.order_status(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Product_Counts(self):
+        return MainPage.mainDB.product_counts(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Good_Counts(self):
+        return MainPage.mainDB.goods_count(self.uiInput1.text(), self.uiInput2.text())
+
+    def invoke_Country_Count_Product(self):
+        return MainPage.mainDB.country_count_product(self.uiInput1.text())
+
+    def invoke_Customer_Country_Count_Product(self):
+        return MainPage.mainDB.customer_country_count_product(self.uiInput1.text())
+
+    def invoke_Country_Count_Status(self):
+        return MainPage.mainDB.country_count_status(self.uiInput1.text())
+
+    def invoke_Customer_Country_Count_Status(self):
+        return MainPage.mainDB.customer_country_count_status(self.uiInput1.text())
+
+    def invoke_Country_Count_Good_To(self):
+        return MainPage.mainDB.country_count_good_to(self.uiInput1.text())
+
+    def invoke_Country_Count_Good_From(self):
+        return MainPage.mainDB.country_count_good_from(self.uiInput1.text())
 
 
 class ResultPage(QtWidgets.QMainWindow):
@@ -457,8 +557,8 @@ class ResultPage(QtWidgets.QMainWindow):
 
 # Main Execution
 if __name__ == '__main__':
-    test = DataBase()
     """
+    test = DataBase()
     print(test.late_query("Indonesia", "Puerto Rico", start_date="01-15-2018", end_date = "01-31-2018"))
     print(test.order_status("Indonesia", "Puerto Rico", start_date="01-15-2018", end_date = "01-31-2018"))
     print(test.product_counts("Indonesia", "Puerto Rico", start_date="01-15-2018", end_date = "01-31-2018"))
