@@ -2,6 +2,7 @@ import sys, psycopg2, csv
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
+from PyQt5.QtSql import QSql, QSqlDatabase, QSqlQueryModel, QSqlQuery
 
 Math_Symbol = ['=', '-', '+']
 AND_OR_Symbol = ['&', '|']
@@ -19,7 +20,16 @@ class DataBase:
         port = '5432'
         password = '2235f9e7e2f3c4a1778c6dc71fd709d492b59563698615697430ebf7262767f1'
         self.conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
-        print("Create cur")
+
+        """
+        self.conn = QSqlDatabase.addDatabase("QPSQL")
+        self.conn.setDatabaseName("d9gadra8cohjt0")
+        self.conn.setHostName("ec2-44-199-86-61.compute-1.amazonaws.com")
+        self.conn.setUserName("jytzjupaqfytoj")
+        self.conn.setPassword("2235f9e7e2f3c4a1778c6dc71fd709d492b59563698615697430ebf7262767f1")
+        self.conn.open()
+        """
+
 
     # One Condition
     def basicQuery(self, table, attr, symbol, attr_Input):
@@ -46,98 +56,178 @@ class DataBase:
         return cur.fetchone()
 
     # Advanced Query
-    def fraud_query(self, country1, country2):
+    def late_query(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a TABLE
+        order_country = "'" + order_country + "'"
+        cust_country = "'" + cust_country + "'"
+        order_state = "'" + order_state + "'"
+        cust_state= "'" + cust_state + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         cur = self.conn.cursor()
-        query_str = "select product.name, count(product.name) from product join (\
-		            select * from orders join customer on orders.customer_id = customer.id where\
-		            orders.country = \'" + country1 + "\' and customer.country = \'" + country2 + "\' \
-                    and orders.shipping_real > shipping_planned) as orders_filtered \
-	                on product.id = orders_filtered.product_id group by product.name;" 
+        query_str = "select product.name, count(product.name) from product join ( \
+		            select * from orders join customer on orders.customer_id = customer.id where \
+			        orders.country = " + order_country + " and customer.country = " + cust_country + " \
+			        and orders.state like " + order_state + " and customer.state like " + cust_state + " \
+                    and orders.shipping_real > shipping_planned) as orders_filtered on product.id = \
+                    orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
+        
+        query_str = (' '*1).join(query_str.split())
         cur.execute(query_str)
         return cur.fetchone()
 
  
 
-    def order_status(self, country1, country2):
+    def order_status(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a GRAPH
+        order_country = "'" + order_country + "'"
+        cust_country = "'" + cust_country + "'"
+        order_state = "'" + order_state + "'"
+        cust_state= "'" + cust_state + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         cur = self.conn.cursor()
         query_str = "select order_status, count(order_status) from orders join customer on \
-	                orders.customer_id = customer.id where orders.country = \'" + country1 + "\' \
-                    and customer.country = \'" + country2 + "\' group by order_status;" 
+                    orders.customer_id = customer.id where orders.country = " + order_country + \
+                    " and customer.country = " + cust_country + " and orders.state like " + order_state + \
+                    " and customer.state like " + cust_state + " and date > " + start_date + " and date < " \
+                    + end_date + " group by order_status;"
+
+        query_str = (' '*1).join(query_str.split())
         cur.execute(query_str)
         return cur.fetchone()
 
-    def product_counts(self, country1, country2):
+    def product_counts(self,  order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a TABLE
+        order_country = "'" + order_country + "'"
+        cust_country = "'" + cust_country + "'"
+        order_state = "'" + order_state + "'"
+        cust_state= "'" + cust_state + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         curr = self.conn.cursor()
-        query_str = "select product.name, count(product.name) from product join ( \
-	                select * from orders join customer on orders.customer_id = customer.id \
-		            where orders.country = \'" + country1 + "\' and customer.country = \'" + country2 + "\' \
-                    as orders_filtered on product.id = orders_filtered.product_id group by product.name;"
+        query_str = "select product.name, count(product.name) from product join (select * from orders join customer on \
+		            orders.customer_id = customer.id where orders.country = " + order_country + " and customer.country = " + cust_country + " \
+                    and orders.state like " + order_state + " and customer.state like " + cust_state + " ) as orders_filtered on product.id = \
+                    orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
         
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 
-    def goods_count(self, country1, country2):
+    def goods_count(self,  order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a TABLE
+        order_country = "'" + order_country + "'"
+        cust_country = "'" + cust_country + "'"
+        order_state = "'" + order_state + "'"
+        cust_state= "'" + cust_state + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         curr = self.conn.cursor()
-        query_str = "select product.category, count(product.category) from product join ( \
-	                select * from orders join customer on orders.customer_id = customer.id \
-		            where orders.country = \'" + country1 + "\' and customer.country = \'" + country2 + "\' \
-                    ) as orders_filtered on product.id = orders_filtered.product_id group by product.category;"
+        query_str = "select product.category, count(product.category) from product join ( select * from orders join customer on \
+		            orders.customer_id = customer.id where orders.country = " + order_country + " and customer.country = " + cust_country + \
+		            " and orders.state like " + order_state + " and customer.state like " + cust_state + " ) as orders_filtered on product.id = \
+                    orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.category;"
+
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 
-    def country_count_product(self, product):
+    def country_count_product(self, product, start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a TABLE
+        product = "'" + product + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         curr = self.conn.cursor()
-        query_str = "select country, count(country) from product join orders \
-	                on product.id = orders.product_id where product.name = \'" + product + \
-                    "\' group by country;"
+        query_str = "select country, count(country) from product join orders on product.id = orders.product_id \
+	                where product.name = " + product + " and date > " + start_date + " and date < " + end_date + \
+	                " group by country; "
         
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 
-    def customer_country_count_product(self, product):
+    def customer_country_count_product(self, product, start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a GRAPH
+        product = "'" + product + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         curr = self.conn.cursor()
         query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
-	                select customer.country, orders.product_id from orders join customer on \
+	                select customer.country, orders.product_id, orders.date from orders join customer on \
 		            orders.customer_id = customer.id ) as orders_filtered on product.id = orders_filtered.product_id \
-	                where product.name = \'" + product + "\' group by orders_filtered.country;"
+	                where product.name = " + product + " and date > " + start_date + " and date < " + end_date + \
+	                " group by orders_filtered.country;"
         
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 
-    def country_count_status(self, status):
+    def country_count_status(self, status, start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a TABLE
+        status = "'" + status + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         curr = self.conn.cursor()
-        query_str = "select country, count(country) from orders where order_status = \' " + status + "\' \
-                    group by country;"
-    
+        query_str = "select country, count(country) from orders where order_status = " + status + \
+	                " and date > " + start_date + " and date < " + end_date + " group by country;"
+        
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 
-    def customer_country_count_status(self, status):
-        curr = self.conn.cursor()
-        query_str = "select customer.country, count(customer.country) from orders join customer \
-	                on orders.customer_id = customer.id where order_status = \' " + status + "\' \
-	                group by customer.country; "
+    def customer_country_count_status(self, status, start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a GRAPH
+        status = "'" + status + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
 
+        curr = self.conn.cursor()
+        query_str = "select customer.country, count(customer.country) from orders join customer on orders.customer_id \
+                = customer.id where order_status = " + status + " and date > " + start_date + " and date < " + end_date + \
+	            " group by customer.country;"
+
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 	
 
-    def country_count_good_to(self, category):
+    def country_count_good_to(self, category, start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a TABLE
+        category = "'" + category + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         curr = self.conn.cursor()
-        query_str = "select country, count(country) from orders join product \
-            on orders.product_id = product.id where category = \' " + category + "\' \
-            group by country;"  
-        
+        query_str = "select country, count(country) from orders join product  on orders.product_id = product.id \
+                where category = " + category + " and  date > " + start_date + " and date < " + end_date + \
+	            " group by country;"
+
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 
-    def country_count_good_from(self, category):
+    def country_count_good_from(self, category, start_date = "01-01-1990", end_date = "12-30-2019"):
+        # Will output a GRAPH
+        category = "'" + category + "'"
+        start_date = "'" + start_date + "'"
+        end_date = "'" + end_date + "'"
+
         curr = self.conn.cursor()
         query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
-	                select customer.country, orders.product_id from orders join customer on \
+	                select customer.country, orders.product_id, orders.date from orders join customer on \
 		            orders.customer_id = customer.id ) as orders_filtered on product.id = orders_filtered.product_id \
-	                where product.category = \' " + category + "\' group by orders_filtered.country;"
-        
+	                where product.category = " + category + " and date > " + start_date + " and date < " + end_date + \
+	                " group by orders_filtered.country;"
+
+        query_str = (' '*1).join(query_str.split())
         curr.execute(query_str)
         return curr.fetchone()
 
@@ -367,6 +457,19 @@ class ResultPage(QtWidgets.QMainWindow):
 
 # Main Execution
 if __name__ == '__main__':
+    test = DataBase()
+    """
+    print(test.late_query("Indonesia", "Puerto Rico", start_date="01-15-2018", end_date = "01-31-2018"))
+    print(test.order_status("Indonesia", "Puerto Rico", start_date="01-15-2018", end_date = "01-31-2018"))
+    print(test.product_counts("Indonesia", "Puerto Rico", start_date="01-15-2018", end_date = "01-31-2018"))
+    print(test.goods_count("Indonesia", "Puerto Rico", start_date="01-15-2018", end_date = "01-31-2018"))
+    print(test.country_count_product("Baby sweater", "12-01-2017", "12-30-2017"))
+    print(test.customer_country_count_product("Baby sweater", "12-01-2017", "12-30-2017"))
+    print(test.country_count_status("COMPLETE", "12-01-2017", "12-30-2017"))
+    print(test.customer_country_count_status("COMPLETE", "12-01-2017", "12-30-2017"))
+    print(test.country_count_good_to("Electronics", "01-01-2017", "12-30-2017"))
+    print(test.country_count_good_from("Electronics", "01-01-2017", "12-30-2017"))
+    """
     app = QApplication(sys.argv)
     window = MainPage()
     widget = QtWidgets.QStackedWidget()
@@ -375,3 +478,6 @@ if __name__ == '__main__':
     widget.setFixedHeight(720)
     widget.show()
     app.exec_()
+
+
+
