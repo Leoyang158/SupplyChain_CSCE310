@@ -507,7 +507,10 @@ class AdvancedPage(QtWidgets.QMainWindow):
         print("hello world")
 
     def backToMain(self):
-        widget.setCurrentIndex(widget.currentIndex() - 1)
+        result = ResultPage()
+        widget.addWidget(result)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
 
     def advancedResult(self):
         # queryRes: represent the result object 
