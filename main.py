@@ -1,4 +1,5 @@
-import sys, psycopg2, csv
+import sys, csv
+# import psycopg2
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
@@ -23,45 +24,44 @@ AdvancedSelections = ['Fraud', 'Order Status', 'Product Counts','Good Counts',
 class DataBase:
     def __init__(self):
         # DataBase API Keys
-        host = 'ec2-44-199-86-61.compute-1.amazonaws.com'
-        dbname = 'd9gadra8cohjt0'
-        user = 'jytzjupaqfytoj'
-        port = '5432'
-        password = '2235f9e7e2f3c4a1778c6dc71fd709d492b59563698615697430ebf7262767f1'
-        self.conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+        # host = 'ec2-44-199-86-61.compute-1.amazonaws.com'
+        # dbname = 'd9gadra8cohjt0'
+        # user = 'jytzjupaqfytoj'
+        # port = '5432'
+        # password = '2235f9e7e2f3c4a1778c6dc71fd709d492b59563698615697430ebf7262767f1'
+        # self.conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
 
-        """
         self.conn = QSqlDatabase.addDatabase("QPSQL")
         self.conn.setDatabaseName("d9gadra8cohjt0")
         self.conn.setHostName("ec2-44-199-86-61.compute-1.amazonaws.com")
         self.conn.setUserName("jytzjupaqfytoj")
         self.conn.setPassword("2235f9e7e2f3c4a1778c6dc71fd709d492b59563698615697430ebf7262767f1")
         self.conn.open()
-        """
-
 
     # One Condition
     def basicQuery(self, table, attr, symbol, attr_Input):
         print("Making basic query 1")
-        cur = self.conn.cursor()
+        qry = QSqlQuery(conn)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr + " " + symbol + " \'" + attr_Input + "\'"\
                    + " LIMIT 5;"
         # queryStr = "SELECT * FROM orders LIMIT 1;"
         print(queryStr)
-        cur.execute(queryStr)
+        qry.prepare(queryStr)
         # cur.execute("SELECT * FROM orders LIMIT 1;")
-        return cur.fetchall()
+        return cur.exec()
 
     # Two Conditions
     def basicQuery2(self, table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input):
         print("Making basic query 2")
-        cur = self.conn.cursor()
+        # cur = self.conn.cursor()
+        qry = QSqlQuery(conn)
         print(table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr_1 + " " + symbol_1 + " " + "\'" + attr_1_Input + "\'"\
                    + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + ";"
         print(queryStr)
-        cur.execute(queryStr)
-        return cur.fetchall()
+        qry.prepare(queryStr)
+        # cur.execute(queryStr)
+        return cur.exec()
 
     # Advanced Query
     def late_query(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
@@ -73,7 +73,8 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        cur = self.conn.cursor()
+        # cur = self.conn.cursor()
+        qry = QSqlQuery(conn)
         query_str = "select product.name, count(product.name) from product join ( \
 		            select * from orders join customer on orders.customer_id = customer.id where \
 			        orders.country = " + order_country + " and customer.country = " + cust_country + " \
@@ -82,10 +83,10 @@ class DataBase:
                     orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
         
         query_str = (' '*1).join(query_str.split())
-        cur.execute(query_str)
-        return cur.fetchone()
-
- 
+        qry.prepare(queryStr)
+        # cur.execute(query_str)
+        # return cur.fetchone()
+        return cur.exec()
 
     def order_status(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
