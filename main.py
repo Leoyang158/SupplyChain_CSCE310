@@ -41,27 +41,29 @@ class DataBase:
     # One Condition
     def basicQuery(self, table, attr, symbol, attr_Input):
         print("Making basic query 1")
-        qry = QSqlQuery(conn)
+        qry = QSqlQuery(self.conn)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr + " " + symbol + " \'" + attr_Input + "\'"\
                    + " LIMIT 5;"
         # queryStr = "SELECT * FROM orders LIMIT 1;"
         print(queryStr)
         qry.prepare(queryStr)
         # cur.execute("SELECT * FROM orders LIMIT 1;")
-        return cur.exec()
+        qry.exec()
+        return qry
 
     # Two Conditions
     def basicQuery2(self, table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input):
         print("Making basic query 2")
         # cur = self.conn.cursor()
-        qry = QSqlQuery(conn)
+        qry = QSqlQuery(self.conn)
         print(table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr_1 + " " + symbol_1 + " " + "\'" + attr_1_Input + "\'"\
                    + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + ";"
         print(queryStr)
         qry.prepare(queryStr)
         # cur.execute(queryStr)
-        return cur.exec()
+        qry.exec()
+        return qry
 
     # Advanced Query
     def late_query(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
@@ -74,7 +76,7 @@ class DataBase:
         end_date = "'" + end_date + "'"
 
         # cur = self.conn.cursor()
-        qry = QSqlQuery(conn)
+        qry = QSqlQuery(self.conn)
         query_str = "select product.name, count(product.name) from product join ( \
 		            select * from orders join customer on orders.customer_id = customer.id where \
 			        orders.country = " + order_country + " and customer.country = " + cust_country + " \
@@ -83,10 +85,9 @@ class DataBase:
                     orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
         
         query_str = (' '*1).join(query_str.split())
-        qry.prepare(queryStr)
-        # cur.execute(query_str)
-        # return cur.fetchone()
-        return cur.exec()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def order_status(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
@@ -97,7 +98,7 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        cur = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select order_status, count(order_status) from orders join customer on \
                     orders.customer_id = customer.id where orders.country = " + order_country + \
                     " and customer.country = " + cust_country + " and orders.state like " + order_state + \
@@ -105,8 +106,9 @@ class DataBase:
                     + end_date + " group by order_status;"
 
         query_str = (' '*1).join(query_str.split())
-        cur.execute(query_str)
-        return cur.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def product_counts(self,  order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
@@ -117,15 +119,16 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select product.name, count(product.name) from product join (select * from orders join customer on \
 		            orders.customer_id = customer.id where orders.country = " + order_country + " and customer.country = " + cust_country + " \
                     and orders.state like " + order_state + " and customer.state like " + cust_state + " ) as orders_filtered on product.id = \
                     orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
         
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def goods_count(self,  order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
@@ -136,15 +139,16 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select product.category, count(product.category) from product join ( select * from orders join customer on \
 		            orders.customer_id = customer.id where orders.country = " + order_country + " and customer.country = " + cust_country + \
 		            " and orders.state like " + order_state + " and customer.state like " + cust_state + " ) as orders_filtered on product.id = \
                     orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.category;"
 
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def country_count_product(self, product, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
@@ -152,14 +156,15 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select country, count(country) from product join orders on product.id = orders.product_id \
 	                where product.name = " + product + " and date > " + start_date + " and date < " + end_date + \
 	                " group by country; "
         
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def customer_country_count_product(self, product, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
@@ -167,7 +172,7 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
 	                select customer.country, orders.product_id, orders.date from orders join customer on \
 		            orders.customer_id = customer.id ) as orders_filtered on product.id = orders_filtered.product_id \
@@ -175,8 +180,9 @@ class DataBase:
 	                " group by orders_filtered.country;"
         
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def country_count_status(self, status, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
@@ -184,13 +190,14 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select country, count(country) from orders where order_status = " + status + \
 	                " and date > " + start_date + " and date < " + end_date + " group by country;"
         
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def customer_country_count_status(self, status, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
@@ -198,14 +205,15 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select customer.country, count(customer.country) from orders join customer on orders.customer_id \
                 = customer.id where order_status = " + status + " and date > " + start_date + " and date < " + end_date + \
 	            " group by customer.country;"
 
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def country_count_good_to(self, category, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
@@ -213,14 +221,15 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select country, count(country) from orders join product  on orders.product_id = product.id \
                 where category = " + category + " and  date > " + start_date + " and date < " + end_date + \
 	            " group by country;"
 
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
     def country_count_good_from(self, category, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
@@ -228,7 +237,7 @@ class DataBase:
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
 
-        curr = self.conn.cursor()
+        qry = QSqlQuery(self.conn)
         query_str = "select orders_filtered.country, count(orders_filtered.country) from product join ( \
 	                select customer.country, orders.product_id, orders.date from orders join customer on \
 		            orders.customer_id = customer.id ) as orders_filtered on product.id = orders_filtered.product_id \
@@ -236,8 +245,9 @@ class DataBase:
 	                " group by orders_filtered.country;"
 
         query_str = (' '*1).join(query_str.split())
-        curr.execute(query_str)
-        return curr.fetchone()
+        qry.prepare(query_str)
+        qry.exec()
+        return qry
 
 
 class MainPage(QtWidgets.QMainWindow):
