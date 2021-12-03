@@ -1,9 +1,11 @@
 import sys, csv
 # import psycopg2
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication
+from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 from PyQt5.QtSql import QSql, QSqlDatabase, QSqlQueryModel, QSqlQuery
+from PyQt5.QtGui import *
+from PyQt5 import QtCore
 
 Math_Symbol = ['=', '-', '+']
 AND_OR_Symbol = ['&', '|']
@@ -11,7 +13,7 @@ Customer_Attribute = ['id', 'city', 'country', 'state', 'department', 'zipcode']
 Order_Attribute = ['type', 'shipping_real', 'shipping_planned', 'delivery_satus', 'customer_id', 'city', 'country',
                    'data', 'id','quantity', 'region', 'state', 'order_status', 'product_id']
 Product_Attribute = ['id', 'name', 'category', 'price']
-AdvancedSelections = ['Fraud', 'Order Status', 'Product Counts','Good Counts',
+AdvancedSelections = ['Late Query', 'Order Status', 'Product Counts','Good Counts',
                       'Count of Countries Product (GO)', 'Count of Countries Product (Come)',
                       'Count of Countries Specific Order Status',
                       'Count of Customer Countries Specific Order Status',
@@ -41,27 +43,29 @@ class DataBase:
     # One Condition
     def basicQuery(self, table, attr, symbol, attr_Input):
         print("Making basic query 1")
-        qry = QSqlQuery(conn)
+        qry = QSqlQuery(self.conn)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr + " " + symbol + " \'" + attr_Input + "\'"\
                    + " LIMIT 5;"
         # queryStr = "SELECT * FROM orders LIMIT 1;"
         print(queryStr)
         qry.prepare(queryStr)
+        qry.exec()
         # cur.execute("SELECT * FROM orders LIMIT 1;")
-        return cur.exec()
+        return qry 
 
     # Two Conditions
     def basicQuery2(self, table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input):
         print("Making basic query 2")
         # cur = self.conn.cursor()
-        qry = QSqlQuery(conn)
+        qry = QSqlQuery(self.conn)
         print(table, attr_1, symbol_1, attr_1_Input, sign, attr_2, symbol_2, attr_2_Input)
         queryStr = "SELECT * FROM " + table + " WHERE " + attr_1 + " " + symbol_1 + " " + "\'" + attr_1_Input + "\'"\
                    + " " + sign + " " + attr_2 + " " + symbol_2 + " \'" + attr_2_Input + "\'" + ";"
         print(queryStr)
         qry.prepare(queryStr)
+        qry.exec()
         # cur.execute(queryStr)
-        return cur.exec()
+        return qry
 
     # Advanced Query
     def late_query(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
@@ -74,7 +78,7 @@ class DataBase:
         end_date = "'" + end_date + "'"
 
         # cur = self.conn.cursor()
-        qry = QSqlQuery(conn)
+        qry = QSqlQuery(self.conn)
         query_str = "select product.name, count(product.name) from product join ( \
 		            select * from orders join customer on orders.customer_id = customer.id where \
 			        orders.country = " + order_country + " and customer.country = " + cust_country + " \
@@ -83,10 +87,11 @@ class DataBase:
                     orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
         
         query_str = (' '*1).join(query_str.split())
-        qry.prepare(queryStr)
+        qry.prepare(query_str)
         # cur.execute(query_str)
         # return cur.fetchone()
-        return cur.exec()
+        qry.exec()
+        return qry;
 
     def order_status(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
@@ -451,14 +456,23 @@ class AdvancedPage(QtWidgets.QMainWindow):
         # Loading UI Files
         super(AdvancedPage, self).__init__()
         loadUi("advancedQuery_new.ui", self)
-        # print(querySelection)
+        print(querySelection)
         self.selection = querySelection
         # Components' Connection
         self.uiSubmitAdvanced.clicked.connect(self.advancedResult)
         self.uiAdvancedBack.clicked.connect(self.backToMain)
         # Hide and Change text
-        if self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
-            self.uiInput2.setVisible(False)
+        if self.selection == "Late Query" or self.selection == "Order Status" or self.selection == "Product Counts" or self.selection == "'Good Counts":
+            print("here")
+            self.uiAdvancedInput2.setVisible(True)
+            self.uiInput3.setVisible(True)
+            self.uiAdvancedInput3.setVisible(True)
+            self.uiInput4.setVisible(True)
+            self.uiAdvancedInput4.setVisible(True)
+            self.line_2.setVisible(True)
+            self.uiAdvancedInput1.setText("Country 1")
+        elif self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
+            print("here")
             self.uiAdvancedInput2.setVisible(False)
             self.uiInput3.setVisible(False)
             self.uiAdvancedInput3.setVisible(False)
@@ -466,7 +480,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.uiAdvancedInput4.setVisible(False)
             self.line_2.setVisible(False)
             self.uiAdvancedInput1.setText("Product")
-        if self.selection == "Count of Countries Specific Order Status" or self.selection == "Count of Customer Countries Specific Order Status":
+        elif self.selection == "Count of Countries Specific Order Status" or self.selection == "Count of Customer Countries Specific Order Status":
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
             self.uiInput3.setVisible(False)
@@ -475,7 +489,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.uiAdvancedInput4.setVisible(False)
             self.line_2.setVisible(False)
             self.uiAdvancedInput1.setText("Status")
-        if self.selection == "Count of countries specific category of goods (Go)" or self.selection == "Count of countries specific category of goods (Come)":
+        elif self.selection == "Count of countries specific category of goods (Go)" or self.selection == "Count of countries specific category of goods (Come)":
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
             self.uiInput3.setVisible(False)
@@ -493,67 +507,63 @@ class AdvancedPage(QtWidgets.QMainWindow):
         print("hello world")
 
     def backToMain(self):
-        # print("qwe")
         widget.setCurrentIndex(widget.currentIndex() - 1)
 
     def advancedResult(self):
+        # queryRes: represent the result object 
         if self.selection == "Fraud":
-            data = self.invoke_fraud()
+            queryRes = self.invoke_fraud()
         elif self.selection == "Order Status":
-            data = self.invoke_Order_Status()
+            queryRes = self.invoke_Order_Status()
         elif self.selection == "Product Counts":
-            data = self.invoke_Product_Counts()
+            queryRes = self.invoke_Product_Counts()
         elif self.selection == "Good Counts":
-            data = self.invoke_Good_Counts()
+            queryRes = self.invoke_Good_Counts()
         elif self.selection == "Count of Countries Product (GO)":
-            data = self.invoke_Country_Count_Product()
+            queryRes = self.invoke_Country_Count_Product()
         elif self.selection == "Count of Countries Product (Come)":
-            data = self.invoke_Customer_Country_Count_Product()
+            queryRes = self.invoke_Customer_Country_Count_Product()
         elif self.selection == "Count of Countries Specific Order Status":
-            data = self.invoke_invoke_Country_Count_Status()
+            queryRes = self.invoke_invoke_Country_Count_Status()
         elif self.selection == "Count of Customer Countries Specific Order Status":
-            data = self.invoke_Customer_Country_Count_Status()
+            queryRes = self.invoke_Customer_Country_Count_Status()
         elif self.selection == "Count of countries specific category of goods (Go)":
-            data = self.invoke_Country_Count_Good_To()
+            queryRes = self.invoke_Country_Count_Good_To()
         elif self.selection == "Count of countries specific category of goods (Come)":
-            data = self.invoke_Country_Count_Good_From()
-        print(data)
+            queryRes = self.invoke_Country_Count_Good_From()
+        
         # the advanced output is here....
         # call the function to create table or graph
 
-        # resView = ResultPage()
-        # widget.addWidget(resView)
-        # widget.setCurrentIndex(widget.currentIndex() + 1)
-
     def invoke_fraud(self):
-        return MainPage.mainDB.fraud_query(self.uiInput1.text(), self.uiInput3.text())
+        return MainPage.mainDB.late_query(self.uiInput1.text(), self.uiInput2.text(), self.uiInput3.text(), self.uiInput4.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Order_Status(self):
-        return MainPage.mainDB.order_status(self.uiInput1.text(), self.uiInput3.text())
+        return MainPage.mainDB.order_status(self.uiInput1.text(), self.uiInput2.text(), self.uiInput3.text(), self.uiInput4.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Product_Counts(self):
-        return MainPage.mainDB.product_counts(self.uiInput1.text(), self.uiInput3.text())
+        return MainPage.mainDB.product_counts(self.uiInput1.text(), self.uiInput2.text(), self.uiInput3.text(), self.uiInput4.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Good_Counts(self):
-        return MainPage.mainDB.goods_count(self.uiInput1.text(), self.uiInput3.text())
+        return MainPage.mainDB.goods_count(self.uiInput1.text(), self.uiInput2.text(), self.uiInput3.text(), self.uiInput4.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Country_Count_Product(self):
-        return MainPage.mainDB.country_count_product(self.uiInput1.text())
+        return MainPage.mainDB.country_count_product(self.uiInput1.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Customer_Country_Count_Product(self):
-        return MainPage.mainDB.customer_country_count_product(self.uiInput1.text())
+        return MainPage.mainDB.customer_country_count_product(self.uiInput1.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Country_Count_Status(self):
-        return MainPage.mainDB.country_count_status(self.uiInput1.text())
+        return MainPage.mainDB.country_count_status(self.uiInput1.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Customer_Country_Count_Status(self):
-        return MainPage.mainDB.customer_country_count_status(self.uiInput1.text())
+        return MainPage.mainDB.customer_country_count_status(self.uiInput1.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Country_Count_Good_To(self):
-        return MainPage.mainDB.country_count_good_to(self.uiInput1.text())
+        return MainPage.mainDB.country_count_good_to(self.uiInput1.text(), self.uiInput5.text(), self.uiInput6.text())
 
     def invoke_Country_Count_Good_From(self):
-        return MainPage.mainDB.country_count_good_from(self.uiInput1.text())
+        return MainPage.mainDB.country_count_good_from(self.uiInput1.text(), self.uiInput5.text(), self.uiInput6.text())
 
 
 class ResultPage(QtWidgets.QMainWindow):
