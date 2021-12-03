@@ -459,14 +459,29 @@ class AdvancedPage(QtWidgets.QMainWindow):
         if self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
+            self.uiInput3.setVisible(False)
+            self.uiAdvancedInput3.setVisible(False)
+            self.uiInput4.setVisible(False)
+            self.uiAdvancedInput4.setVisible(False)
+            self.line_2.setVisible(False)
             self.uiAdvancedInput1.setText("Product")
         if self.selection == "Count of Countries Specific Order Status" or self.selection == "Count of Customer Countries Specific Order Status":
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
+            self.uiInput3.setVisible(False)
+            self.uiAdvancedInput3.setVisible(False)
+            self.uiInput4.setVisible(False)
+            self.uiAdvancedInput4.setVisible(False)
+            self.line_2.setVisible(False)
             self.uiAdvancedInput1.setText("Status")
         if self.selection == "Count of countries specific category of goods (Go)" or self.selection == "Count of countries specific category of goods (Come)":
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
+            self.uiInput3.setVisible(False)
+            self.uiAdvancedInput3.setVisible(False)
+            self.uiInput4.setVisible(False)
+            self.uiAdvancedInput4.setVisible(False)
+            self.line_2.setVisible(False)
             self.uiAdvancedInput1.setText("Category")
 
 
@@ -510,16 +525,16 @@ class AdvancedPage(QtWidgets.QMainWindow):
         # widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def invoke_fraud(self):
-        return MainPage.mainDB.fraud_query(self.uiInput1.text(), self.uiInput2.text())
+        return MainPage.mainDB.fraud_query(self.uiInput1.text(), self.uiInput3.text())
 
     def invoke_Order_Status(self):
-        return MainPage.mainDB.order_status(self.uiInput1.text(), self.uiInput2.text())
+        return MainPage.mainDB.order_status(self.uiInput1.text(), self.uiInput3.text())
 
     def invoke_Product_Counts(self):
-        return MainPage.mainDB.product_counts(self.uiInput1.text(), self.uiInput2.text())
+        return MainPage.mainDB.product_counts(self.uiInput1.text(), self.uiInput3.text())
 
     def invoke_Good_Counts(self):
-        return MainPage.mainDB.goods_count(self.uiInput1.text(), self.uiInput2.text())
+        return MainPage.mainDB.goods_count(self.uiInput1.text(), self.uiInput3.text())
 
     def invoke_Country_Count_Product(self):
         return MainPage.mainDB.country_count_product(self.uiInput1.text())
