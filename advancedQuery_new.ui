@@ -214,7 +214,7 @@
        <item>
         <widget class="QLabel" name="uiAdvancedInput5">
          <property name="text">
-          <string>Date (Maximum)</string>
+          <string>Start Date</string>
          </property>
         </widget>
        </item>
@@ -241,7 +241,7 @@
        <item>
         <widget class="QLabel" name="uiAdvancedInput6">
          <property name="text">
-          <string>Date (Minimum)</string>
+          <string>End Date</string>
          </property>
         </widget>
        </item>
