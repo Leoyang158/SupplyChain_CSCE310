@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>140</x>
@@ -25,12 +25,9 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTableView" name="uiResultTable"/>
-     </item>
-     <item>
       <widget class="QPushButton" name="uiSearchButton">
        <property name="text">
-        <string>New Search</string>
+        <string>Back To Main Page</string>
        </property>
       </widget>
      </item>
@@ -43,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

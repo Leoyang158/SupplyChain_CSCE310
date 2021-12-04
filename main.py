@@ -394,8 +394,8 @@ class MainPage(QtWidgets.QMainWindow):
                                                      self.uiAddSignCombo.currentText(),
                                                      self.uiAddText.text())
         print(customerResult)
-        # the advanced output is here....
-        # call the function to create table or graph
+        # the basic query output is here....
+        # call the function to create table or graph (base)
 
         # customerView = ResultPage()
         # widget.addWidget(customerView)
@@ -418,8 +418,8 @@ class MainPage(QtWidgets.QMainWindow):
                                                self.uiAddSignCombo_2.currentText(),
                                                self.uiAddText_2.text())
         print(orderRes)
-        # the advanced output is here....
-        # call the function to create table or graph
+        # the basic query output is here....
+        # call the function to create table or graph (base)
 
         # orderView = ResultPage()
         # widget.addWidget(orderView)
@@ -443,8 +443,8 @@ class MainPage(QtWidgets.QMainWindow):
                                                  self.uiAddSignCombo_3.currentText(),
                                                  self.uiAddText_3.text())
         print(productRes)
-        # the advanced output is here....
-        # call the function to create table or graph
+        # the basic query output is here....
+        # call the function to create table or graph (base)
 
         # productView = ResultPage()
         # widget.addWidget(productView)
@@ -472,7 +472,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
         self.uiAdvancedBack.clicked.connect(self.backToMain)
         # Hide and Change text
         if self.selection == "Late Query" or self.selection == "Order Status" or self.selection == "Product Counts" or self.selection == "'Good Counts":
-            print("here")
+            # print("here")
             self.uiAdvancedInput2.setVisible(True)
             self.uiInput3.setVisible(True)
             self.uiAdvancedInput3.setVisible(True)
@@ -481,7 +481,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.line_2.setVisible(True)
             self.uiAdvancedInput1.setText("Country 1")
         elif self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
-            print("here")
+            # print("here")
             self.uiAdvancedInput2.setVisible(False)
             self.uiInput3.setVisible(False)
             self.uiAdvancedInput3.setVisible(False)
@@ -490,6 +490,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.line_2.setVisible(False)
             self.uiAdvancedInput1.setText("Product")
         elif self.selection == "Count of Countries Specific Order Status" or self.selection == "Count of Customer Countries Specific Order Status":
+            # print("here")
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
             self.uiInput3.setVisible(False)
@@ -499,6 +500,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.line_2.setVisible(False)
             self.uiAdvancedInput1.setText("Status")
         elif self.selection == "Count of countries specific category of goods (Go)" or self.selection == "Count of countries specific category of goods (Come)":
+            # print("here")
             self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
             self.uiInput3.setVisible(False)
@@ -510,9 +512,11 @@ class AdvancedPage(QtWidgets.QMainWindow):
 
 
     def make_table(self, sql_output):
+        # start the sql table here  (advanced)
         print("hello world")
 
     def make_graph(self, sql_output):
+         # start the sql graph here (advanced)
         print("hello world")
 
     def backToMain(self):
