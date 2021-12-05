@@ -396,6 +396,7 @@ class MainPage(QtWidgets.QMainWindow):
         print(customerResult)
         # the basic query output is here....
         # call the function to create table or graph (base)
+        makeTable(self, customerResult)
 
         # customerView = ResultPage()
         # widget.addWidget(customerView)
@@ -419,6 +420,9 @@ class MainPage(QtWidgets.QMainWindow):
                                                self.uiAddText_2.text())
         print(orderRes)
         # the basic query output is here....
+        # Create a query model object and set the query to the query above
+        makeTable(self, orderRes)
+
         # call the function to create table or graph (base)
 
         # orderView = ResultPage()
@@ -445,6 +449,7 @@ class MainPage(QtWidgets.QMainWindow):
         print(productRes)
         # the basic query output is here....
         # call the function to create table or graph (base)
+        makeTable(self, productRes)
 
         # productView = ResultPage()
         # widget.addWidget(productView)
@@ -596,6 +601,12 @@ class ResultPage(QtWidgets.QMainWindow):
         widget.addWidget(newView)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
+def makeTable(object, query):
+    model = QSqlQueryModel()
+    model.setQuery(query)
+
+    # Set the table's  model to the model made above.
+    object.uiBasicTable.setModel(model)
 
 # Main Execution
 if __name__ == '__main__':
