@@ -5,7 +5,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 from PyQt5.QtSql import QSql, QSqlDatabase, QSqlQueryModel, QSqlQuery
 from PyQt5.QtGui import *
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries
+from PyQt5.Qt import Qt
 
 Math_Symbol = ['=', '-', '+']
 AND_OR_Symbol = ['&', '|']
@@ -85,13 +87,16 @@ class DataBase:
 			        and orders.state like " + order_state + " and customer.state like " + cust_state + " \
                     and orders.shipping_real > shipping_planned) as orders_filtered on product.id = \
                     orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
+
+        
         
         query_str = (' '*1).join(query_str.split())
+        print(query_str)
         qry.prepare(query_str)
         # cur.execute(query_str)
         # return cur.fetchone()
         qry.exec()
-        return qry;
+        return qry
 
     def order_status(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
@@ -108,7 +113,7 @@ class DataBase:
                     " and customer.country = " + cust_country + " and orders.state like " + order_state + \
                     " and customer.state like " + cust_state + " and date > " + start_date + " and date < " \
                     + end_date + " group by order_status;"
-
+        print(query_str)
         query_str = (' '*1).join(query_str.split())
         qry.prepare(query_str)
         qry.exec()
@@ -377,6 +382,13 @@ class MainPage(QtWidgets.QMainWindow):
             self.uiAddSignCombo_3.setVisible(True)
             self.uiAddText_3.setVisible(True)
 
+    def make_table(self, sql_output):
+        model = QSqlQueryModel()
+        model.setQuery(sql_output)
+
+        # Set the table's  model to the model made above.
+        self.uiBasicTable.setModel(model)
+
     def customerResult(self):
         # Make Query For Customer
         if self.uiCustomerAdd.text() == "+":
@@ -396,6 +408,7 @@ class MainPage(QtWidgets.QMainWindow):
         print(customerResult)
         # the basic query output is here....
         # call the function to create table or graph (base)
+        self.make_table(customerResult)
 
         # customerView = ResultPage()
         # widget.addWidget(customerView)
@@ -419,6 +432,9 @@ class MainPage(QtWidgets.QMainWindow):
                                                self.uiAddText_2.text())
         print(orderRes)
         # the basic query output is here....
+        # Create a query model object and set the query to the query above
+        self.make_table(orderRes)
+
         # call the function to create table or graph (base)
 
         # orderView = ResultPage()
@@ -445,6 +461,7 @@ class MainPage(QtWidgets.QMainWindow):
         print(productRes)
         # the basic query output is here....
         # call the function to create table or graph (base)
+        self.make_table(productRes)
 
         # productView = ResultPage()
         # widget.addWidget(productView)
@@ -512,12 +529,76 @@ class AdvancedPage(QtWidgets.QMainWindow):
 
 
     def make_table(self, sql_output):
-        # start the sql table here  (advanced)
-        print("hello world")
+        model = QSqlQueryModel()
+        model.setQuery(sql_output)
 
-    def make_graph(self, sql_output):
+        # Set the table's  model to the model made above.
+        self.uiAdvancedTable.setModel(model)
+
+    def make_graph(self, sql_output, queryName = ""):
          # start the sql graph here (advanced)
-        print("hello world")
+        xAxis = []
+        yAxis = []
+
+        # Puts data into format useable by graph
+        max = -1
+        while sql_output.next():
+            xAxis.append(sql_output.value(0))
+            yAxis.append(sql_output.value(1))
+            if(max < sql_output.value(1)):
+                max = sql_output.value(1)
+
+        # Deletes any widgets that were in the vertical layout
+        # Important so that you don't have multiple graphs everytime you do a search
+        for i in range(self.verticalLayout.count()):
+            if(isinstance(self.verticalLayout.itemAt(i).widget(), QChartView)):
+                self.verticalLayout.itemAt(i).widget().setParent(None)
+
+        # Still not sure if you need this here but keep it just in case
+        set0 = QBarSet('X0')
+
+        # Add the y-axis to the set
+        set0.append(yAxis)
+
+        # Add the data set to the series
+        series = QBarSeries()
+        series.append(set0)
+
+        # Create the chart object and add the series to it
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle(queryName)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+
+        # Create the x-axis object
+        axisX = QBarCategoryAxis()
+        axisX.append(xAxis)
+        axisX.setLabelsAngle(-90)
+
+        # Create the y axis object and set it's range
+        # Data is not stored in the y-axis, it's stored in the series you created earlier
+        axisY = QValueAxis()
+        axisY.setRange(0, max)
+
+        # Add x-axis and y-axis to chart
+        chart.addAxis(axisX, Qt.AlignBottom)
+        chart.addAxis(axisY, Qt.AlignLeft)
+
+        # Removes the useless legend
+        chart.legend().setVisible(False)
+
+        # Create the chart view from the chart object
+        chartView = QChartView(chart)
+        chartView.setFixedHeight(400)
+
+        # Add the chart view to the vertical layout (which should be added via the UI creator.)
+        self.uiAdvancedTable.setVisible(False)
+
+        # vbox = QVBoxLayout()
+        # self.uiAdvancedGraph.setLayout(vbox)
+        # vbox.addWidget(chartView)
+    
+        self.verticalLayout.addWidget(chartView)
 
     def backToMain(self):
         result = ResultPage()
@@ -527,29 +608,40 @@ class AdvancedPage(QtWidgets.QMainWindow):
 
     def advancedResult(self):
         # queryRes: represent the result object 
-        if self.selection == "Fraud":
+        if self.selection == "Late Query":
             queryRes = self.invoke_fraud()
+            self.make_table(queryRes)
         elif self.selection == "Order Status":
             queryRes = self.invoke_Order_Status()
+            self.make_graph(queryRes, "Order Status")
         elif self.selection == "Product Counts":
             queryRes = self.invoke_Product_Counts()
+            self.make_table(queryRes)
         elif self.selection == "Good Counts":
             queryRes = self.invoke_Good_Counts()
+            self.make_table(queryRes)
         elif self.selection == "Count of Countries Product (GO)":
             queryRes = self.invoke_Country_Count_Product()
+            self.make_table(queryRes)
         elif self.selection == "Count of Countries Product (Come)":
             queryRes = self.invoke_Customer_Country_Count_Product()
+            self.make_graph(queryRes, "Count of Countries Product (Come)")
         elif self.selection == "Count of Countries Specific Order Status":
-            queryRes = self.invoke_invoke_Country_Count_Status()
+            queryRes = self.invoke_Country_Count_Status()
+            self.make_table(queryRes)
         elif self.selection == "Count of Customer Countries Specific Order Status":
             queryRes = self.invoke_Customer_Country_Count_Status()
+            self.make_graph(queryRes, "Count of Customer Countries Specific Order Status")
         elif self.selection == "Count of countries specific category of goods (Go)":
             queryRes = self.invoke_Country_Count_Good_To()
+            self.make_table(queryRes)
         elif self.selection == "Count of countries specific category of goods (Come)":
             queryRes = self.invoke_Country_Count_Good_From()
-        
+            self.make_graph(queryRes, "Count of countries specific category of goods (Come)")
         # the advanced output is here....
         # call the function to create table or graph
+
+        # self.make_table(queryRes)
 
     def invoke_fraud(self):
         return MainPage.mainDB.late_query(self.uiInput1.text(), self.uiInput2.text(), self.uiInput3.text(), self.uiInput4.text(), self.uiInput5.text(), self.uiInput6.text())
@@ -617,7 +709,7 @@ if __name__ == '__main__':
     widget = QtWidgets.QStackedWidget()
     widget.addWidget(window)
     widget.setFixedWidth(700)
-    widget.setFixedHeight(720)
+    widget.setFixedHeight(1000)
     widget.show()
     app.exec_()
 

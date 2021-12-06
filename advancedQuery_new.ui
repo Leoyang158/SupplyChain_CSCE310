@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>698</width>
+    <height>943</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>81</x>
       <y>22</y>
       <width>492</width>
-      <height>460</height>
+      <height>831</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -115,7 +115,7 @@
        <item>
         <widget class="QLabel" name="uiAdvancedInput2">
          <property name="text">
-          <string>State 1</string>
+          <string>Country 2</string>
          </property>
         </widget>
        </item>
@@ -149,7 +149,7 @@
        <item>
         <widget class="QLabel" name="uiAdvancedInput3">
          <property name="text">
-          <string>Country 2</string>
+          <string>State 1</string>
          </property>
         </widget>
        </item>
@@ -274,13 +274,6 @@
       <widget class="QTableView" name="uiAdvancedTable"/>
      </item>
      <item>
-      <widget class="QGroupBox" name="uiAdvancedGraph">
-       <property name="title">
-        <string>Graph</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="uiSubmitAdvanced">
        <property name="text">
         <string>Submit</string>
@@ -295,8 +288,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>21</height>
+     <width>698</width>
+     <height>20</height>
     </rect>
    </property>
   </widget>
