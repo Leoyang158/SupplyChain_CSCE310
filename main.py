@@ -87,13 +87,16 @@ class DataBase:
 			        and orders.state like " + order_state + " and customer.state like " + cust_state + " \
                     and orders.shipping_real > shipping_planned) as orders_filtered on product.id = \
                     orders_filtered.product_id where date > " + start_date + " and date < " + end_date + " group by product.name;"
+
+        
         
         query_str = (' '*1).join(query_str.split())
+        print(query_str)
         qry.prepare(query_str)
         # cur.execute(query_str)
         # return cur.fetchone()
         qry.exec()
-        return qry;
+        return qry
 
     def order_status(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
@@ -110,7 +113,7 @@ class DataBase:
                     " and customer.country = " + cust_country + " and orders.state like " + order_state + \
                     " and customer.state like " + cust_state + " and date > " + start_date + " and date < " \
                     + end_date + " group by order_status;"
-
+        print(query_str)
         query_str = (' '*1).join(query_str.split())
         qry.prepare(query_str)
         qry.exec()
@@ -530,7 +533,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
         model.setQuery(sql_output)
 
         # Set the table's  model to the model made above.
-        self.uiBasicTable.setModel(model)
+        self.uiAdvancedTable.setModel(model)
 
     def make_graph(self, sql_output, queryName = ""):
          # start the sql graph here (advanced)
@@ -586,9 +589,15 @@ class AdvancedPage(QtWidgets.QMainWindow):
 
         # Create the chart view from the chart object
         chartView = QChartView(chart)
-        chartView.setFixedHeight(300)
+        chartView.setFixedHeight(400)
 
         # Add the chart view to the vertical layout (which should be added via the UI creator.)
+        self.uiAdvancedTable.setVisible(False)
+
+        # vbox = QVBoxLayout()
+        # self.uiAdvancedGraph.setLayout(vbox)
+        # vbox.addWidget(chartView)
+    
         self.verticalLayout.addWidget(chartView)
 
     def backToMain(self):
@@ -599,7 +608,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
 
     def advancedResult(self):
         # queryRes: represent the result object 
-        if self.selection == "Fraud":
+        if self.selection == "Late Query":
             queryRes = self.invoke_fraud()
             self.make_table(queryRes)
         elif self.selection == "Order Status":
@@ -700,7 +709,7 @@ if __name__ == '__main__':
     widget = QtWidgets.QStackedWidget()
     widget.addWidget(window)
     widget.setFixedWidth(700)
-    widget.setFixedHeight(720)
+    widget.setFixedHeight(1000)
     widget.show()
     app.exec_()
 
