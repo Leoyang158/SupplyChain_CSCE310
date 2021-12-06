@@ -379,6 +379,13 @@ class MainPage(QtWidgets.QMainWindow):
             self.uiAddSignCombo_3.setVisible(True)
             self.uiAddText_3.setVisible(True)
 
+    def make_table(self, sql_output):
+        model = QSqlQueryModel()
+        model.setQuery(sql_output)
+
+        # Set the table's  model to the model made above.
+        self.uiBasicTable.setModel(model)
+
     def customerResult(self):
         # Make Query For Customer
         if self.uiCustomerAdd.text() == "+":
@@ -398,6 +405,7 @@ class MainPage(QtWidgets.QMainWindow):
         print(customerResult)
         # the basic query output is here....
         # call the function to create table or graph (base)
+        self.make_table(customerResult)
 
         # customerView = ResultPage()
         # widget.addWidget(customerView)
@@ -421,6 +429,9 @@ class MainPage(QtWidgets.QMainWindow):
                                                self.uiAddText_2.text())
         print(orderRes)
         # the basic query output is here....
+        # Create a query model object and set the query to the query above
+        self.make_table(orderRes)
+
         # call the function to create table or graph (base)
 
         # orderView = ResultPage()
@@ -447,6 +458,7 @@ class MainPage(QtWidgets.QMainWindow):
         print(productRes)
         # the basic query output is here....
         # call the function to create table or graph (base)
+        self.make_table(productRes)
 
         # productView = ResultPage()
         # widget.addWidget(productView)
@@ -514,8 +526,11 @@ class AdvancedPage(QtWidgets.QMainWindow):
 
 
     def make_table(self, sql_output):
-        # start the sql table here  (advanced)
-        print("hello world")
+        model = QSqlQueryModel()
+        model.setQuery(sql_output)
+
+        # Set the table's  model to the model made above.
+        self.uiBasicTable.setModel(model)
 
     def make_graph(self, sql_output, queryName = ""):
          # start the sql graph here (advanced)
@@ -586,31 +601,38 @@ class AdvancedPage(QtWidgets.QMainWindow):
         # queryRes: represent the result object 
         if self.selection == "Fraud":
             queryRes = self.invoke_fraud()
+            self.make_table(queryRes)
         elif self.selection == "Order Status":
             queryRes = self.invoke_Order_Status()
             self.make_graph(queryRes, "Order Status")
         elif self.selection == "Product Counts":
             queryRes = self.invoke_Product_Counts()
+            self.make_table(queryRes)
         elif self.selection == "Good Counts":
             queryRes = self.invoke_Good_Counts()
+            self.make_table(queryRes)
         elif self.selection == "Count of Countries Product (GO)":
             queryRes = self.invoke_Country_Count_Product()
+            self.make_table(queryRes)
         elif self.selection == "Count of Countries Product (Come)":
             queryRes = self.invoke_Customer_Country_Count_Product()
             self.make_graph(queryRes, "Count of Countries Product (Come)")
         elif self.selection == "Count of Countries Specific Order Status":
             queryRes = self.invoke_Country_Count_Status()
+            self.make_table(queryRes)
         elif self.selection == "Count of Customer Countries Specific Order Status":
             queryRes = self.invoke_Customer_Country_Count_Status()
             self.make_graph(queryRes, "Count of Customer Countries Specific Order Status")
         elif self.selection == "Count of countries specific category of goods (Go)":
             queryRes = self.invoke_Country_Count_Good_To()
+            self.make_table(queryRes)
         elif self.selection == "Count of countries specific category of goods (Come)":
             queryRes = self.invoke_Country_Count_Good_From()
             self.make_graph(queryRes, "Count of countries specific category of goods (Come)")
-        
         # the advanced output is here....
         # call the function to create table or graph
+
+        # self.make_table(queryRes)
 
     def invoke_fraud(self):
         return MainPage.mainDB.late_query(self.uiInput1.text(), self.uiInput2.text(), self.uiInput3.text(), self.uiInput4.text(), self.uiInput5.text(), self.uiInput6.text())
