@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarCategoryAxis, QBarSet, QBarSeries
 from PyQt5.Qt import Qt
 
-Math_Symbol = ['=', '-', '+']
+Math_Symbol = ['=', '<', '>']
 AND_OR_Symbol = ['&', '|']
 Customer_Attribute = ['id', 'city', 'country', 'state', 'department', 'zipcode']
 Order_Attribute = ['type', 'shipping_real', 'shipping_planned', 'delivery_satus', 'customer_id', 'city', 'country',
