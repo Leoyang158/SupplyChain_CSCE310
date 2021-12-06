@@ -72,6 +72,17 @@ class DataBase:
     # Advanced Query
     def late_query(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
+        if order_state == "":
+            order_state = "%"
+        
+        if cust_state == "":
+            cust_state = "%"
+        
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
         order_country = "'" + order_country + "'"
         cust_country = "'" + cust_country + "'"
         order_state = "'" + order_state + "'"
@@ -100,6 +111,17 @@ class DataBase:
 
     def order_status(self, order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
+        if order_state == "":
+            order_state = "%"
+        
+        if cust_state == "":
+            cust_state = "%"
+        
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
         order_country = "'" + order_country + "'"
         cust_country = "'" + cust_country + "'"
         order_state = "'" + order_state + "'"
@@ -121,6 +143,18 @@ class DataBase:
 
     def product_counts(self,  order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
+        if order_state == "":
+            order_state = "%"
+        
+        if cust_state == "":
+            cust_state = "%"
+        
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         order_country = "'" + order_country + "'"
         cust_country = "'" + cust_country + "'"
         order_state = "'" + order_state + "'"
@@ -141,6 +175,18 @@ class DataBase:
 
     def goods_count(self,  order_country, cust_country, order_state = "%", cust_state = "%", start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
+        if order_state == "":
+            order_state = "%"
+        
+        if cust_state == "":
+            cust_state = "%"
+        
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         order_country = "'" + order_country + "'"
         cust_country = "'" + cust_country + "'"
         order_state = "'" + order_state + "'"
@@ -161,6 +207,12 @@ class DataBase:
 
     def country_count_product(self, product, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         product = "'" + product + "'"
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
@@ -176,7 +228,13 @@ class DataBase:
         return qry
 
     def customer_country_count_product(self, product, start_date = "01-01-1990", end_date = "12-30-2019"):
-        # Will output a GRAPH
+        # Will output a GRAPH    
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         product = "'" + product + "'"
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
@@ -195,6 +253,12 @@ class DataBase:
 
     def country_count_status(self, status, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a TABLE
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         status = "'" + status + "'"
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
@@ -210,6 +274,12 @@ class DataBase:
 
     def customer_country_count_status(self, status, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         status = "'" + status + "'"
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
@@ -225,7 +295,13 @@ class DataBase:
         return qry
 
     def country_count_good_to(self, category, start_date = "01-01-1990", end_date = "12-30-2019"):
-        # Will output a TABLE
+        # Will output a TABLE  
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         category = "'" + category + "'"
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"
@@ -242,6 +318,12 @@ class DataBase:
 
     def country_count_good_from(self, category, start_date = "01-01-1990", end_date = "12-30-2019"):
         # Will output a GRAPH
+        if start_date == "":
+            start_date = "01-01-1990"
+        
+        if end_date == "":
+            end_date = "12-30-2019"
+
         category = "'" + category + "'"
         start_date = "'" + start_date + "'"
         end_date = "'" + end_date + "'"

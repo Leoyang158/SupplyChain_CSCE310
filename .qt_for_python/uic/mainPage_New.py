@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(670, 614)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -226,16 +226,6 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
-        self.menubar.setObjectName("menubar")
-        self.menuGet_Start = QtWidgets.QMenu(self.menubar)
-        self.menuGet_Start.setObjectName("menuGet_Start")
-        self.menuHelp = QtWidgets.QMenu(self.menubar)
-        self.menuHelp.setObjectName("menuHelp")
-        MainWindow.setMenuBar(self.menubar)
-        self.menubar.addAction(self.menuGet_Start.menuAction())
-        self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -257,5 +247,3 @@ class Ui_MainWindow(object):
         self.advanceTitle.setText(_translate("MainWindow", "Advanced Queries"))
         self.label.setText(_translate("MainWindow", "Make your selection"))
         self.uiAdvancedPopUp.setText(_translate("MainWindow", "Search"))
-        self.menuGet_Start.setTitle(_translate("MainWindow", "Get Started"))
-        self.menuHelp.setTitle(_translate("MainWindow", "Help"))
