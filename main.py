@@ -581,6 +581,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
             self.uiAdvancedInput1.setText("Country 1")
         elif self.selection == "Count of Countries Product (GO)" or self.selection == "Count of Countries Product (Come)":
             # print("here")
+            self.uiInput2.setVisible(False)
             self.uiAdvancedInput2.setVisible(False)
             self.uiInput3.setVisible(False)
             self.uiAdvancedInput3.setVisible(False)
