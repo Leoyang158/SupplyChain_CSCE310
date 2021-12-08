@@ -15,7 +15,7 @@ Customer_Attribute = ['id', 'city', 'country', 'state', 'department', 'zipcode']
 Order_Attribute = ['type', 'shipping_real', 'shipping_planned', 'delivery_satus', 'customer_id', 'city', 'country',
                    'data', 'id','quantity', 'region', 'state', 'order_status', 'product_id']
 Product_Attribute = ['id', 'name', 'category', 'price']
-AdvancedSelections = ['Late Query', 'Order Status', 'Product Counts','Good Counts',
+AdvancedSelections = ['Late Query', 'Order Status', 'Product Counts','Product Category Counts',
                       'Count of Countries Product (GO)', 'Count of Countries Product (Come)',
                       'Count of Countries Specific Order Status',
                       'Count of Customer Countries Specific Order Status',
@@ -570,7 +570,7 @@ class AdvancedPage(QtWidgets.QMainWindow):
         self.uiSubmitAdvanced.clicked.connect(self.advancedResult)
         self.uiAdvancedBack.clicked.connect(self.backToMain)
         # Hide and Change text
-        if self.selection == "Late Query" or self.selection == "Order Status" or self.selection == "Product Counts" or self.selection == "'Good Counts":
+        if self.selection == "Late Query" or self.selection == "Order Status" or self.selection == "Product Counts" or self.selection == "Product Category Counts":
             # print("here")
             self.uiAdvancedInput2.setVisible(True)
             self.uiInput3.setVisible(True)
